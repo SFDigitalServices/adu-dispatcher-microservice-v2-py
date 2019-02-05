@@ -3,6 +3,7 @@ SFDS middleware.py jumpstarts your next python-based middleware microservice. It
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
 * [gunicorn](https://gunicorn.org/): Python WSGI HTTP Server for UNIX
 * [pytest](https://docs.pytest.org/en/latest/): Python testing tool 
+* [pylint](https://www.pylint.org/): code analysis for Python
 * [sentry](https://sentry.io/): error tracking tool
 * [jsend](https://github.com/omniti-labs/jsend):  a specification for a simple, no-frills, JSON based format for application-level communication
 
