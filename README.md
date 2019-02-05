@@ -15,19 +15,19 @@ SFDS microservice.py jumpstarts your next python-based microservice. It consists
 ## Get started
 
 Create your virual environment (e.g. via virtualenvwrapper)
-> $ mkvirtualenv sfds-mwpy
+> $ mkvirtualenv python-microservice-template
 
 Start your virtual environment 
-> $ workon sfds-mwpy
+> $ workon python-microservice-template
 
 Install included packages
-> (sfds-mwpy)$ pip install -r requirements.txt
+> (python-microservice-template)$ pip install -r requirements.txt
 
 Start WSGI Server
-> (sfds-mwpy)$ gunicorn 'service.microservice:start_service()'
+> (python-microservice-template)$ gunicorn 'service.microservice:start_service()'
 
 Run Pytest
-> (sfds-mwpy)$ pytest tests
+> (python-microservice-template)$ pytest tests
 
 Open with cURL or web browser
 > $curl http://127.0.0.1:8000/welcome
