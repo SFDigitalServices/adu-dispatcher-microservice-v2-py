@@ -1,5 +1,5 @@
 # SFDS middleware.py
-SFDS middleware.py jumpstarts your next python-based middleware microservice. It consist of a skeleton boilerplate make up of
+SFDS middleware.py jumpstarts your next python-based middleware microservice. It consists of a skeleton boilerplate make up of
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
 * [gunicorn](https://gunicorn.org/): Python WSGI HTTP Server for UNIX
 * [pytest](https://docs.pytest.org/en/latest/): Python testing tool 
@@ -8,7 +8,7 @@ SFDS middleware.py jumpstarts your next python-based middleware microservice. It
 
 ## Requirement
 * Python3 
-([Mac OS X](https://docs.python-guide.org/starting/install3/osx/) / [Windows](https://www.stuartellis.name/articles/python-development-windows/)
+([Mac OS X](https://docs.python-guide.org/starting/install3/osx/) / [Windows](https://www.stuartellis.name/articles/python-development-windows/))
 * Pipenv & Virtual Environments ([virtualenv](https://docs.python-guide.org/dev/virtualenvs/#virtualenvironments-ref) / [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/))
 
 ## Get started
