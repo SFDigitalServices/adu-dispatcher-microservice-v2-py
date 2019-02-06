@@ -43,7 +43,7 @@ jobs:
           name: start gunicorn
           command: |
             . venv/bin/activate
-            gunicorn 'service.middleware:start_service()'
+            gunicorn 'service.microservice:start_service()'
           background: true
 
       # run tests!

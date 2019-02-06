@@ -1,5 +1,5 @@
-# SFDS middleware.py
-SFDS middleware.py jumpstarts your next python-based middleware microservice. It consists of a skeleton boilerplate make up of
+# SFDS microservice.py
+SFDS microservice.py jumpstarts your next python-based microservice. It consists of a skeleton boilerplate make up of
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
 * [gunicorn](https://gunicorn.org/): Python WSGI HTTP Server for UNIX
 * [pytest](https://docs.pytest.org/en/latest/): Python testing tool 
@@ -15,19 +15,19 @@ SFDS middleware.py jumpstarts your next python-based middleware microservice. It
 ## Get started
 
 Create your virual environment (e.g. via virtualenvwrapper)
-> $ mkvirtualenv sfds-mwpy
+> $ mkvirtualenv microservice-py
 
 Start your virtual environment 
-> $ workon sfds-mwpy
+> $ workon python-microservice-template
 
 Install included packages
-> (sfds-mwpy)$ pip install -r requirements.txt
+> (microservice-py)$ pip install -r requirements.txt
 
 Start WSGI Server
-> (sfds-mwpy)$ gunicorn 'service.middleware:start_service()'
+> (microservice-py)$ gunicorn 'service.microservice:start_service()'
 
 Run Pytest
-> (sfds-mwpy)$ pytest tests
+> (microservice-py)$ pytest tests
 
 Open with cURL or web browser
 > $curl http://127.0.0.1:8000/welcome
