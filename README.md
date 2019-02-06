@@ -1,4 +1,4 @@
-# SFDS microservice.py
+# SFDS microservice.py [![CircleCI](https://circleci.com/gh/SFDigitalServices/microservice-py.svg?style=svg)](https://circleci.com/gh/SFDigitalServices/microservice-py)
 SFDS microservice.py jumpstarts your next python-based microservice. It consists of a skeleton boilerplate make up of
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
 * [gunicorn](https://gunicorn.org/): Python WSGI HTTP Server for UNIX
