@@ -18,7 +18,7 @@ Create your virual environment (e.g. via virtualenvwrapper)
 > $ mkvirtualenv microservice-py
 
 Start your virtual environment 
-> $ workon python-microservice-template
+> $ workon microservice-py
 
 Install included packages
 > (microservice-py)$ pip install -r requirements.txt
