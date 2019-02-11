@@ -55,7 +55,7 @@ The last step is to pull down a complete copy of the original repo:
 Or, an easier way:
 > $ git pull upstream master
 
-Now, you can work on your new repo to your hearts content. If any changes are made to the original repo, simply execute a git pull upstream master and your new repo will receive the updates that were made to the original!
+Now, you can work on your new repo to your hearts content. If any changes are made to the original repo, simply execute a `git pull upstream master` and your new repo will receive the updates that were made to the original!
 
 Psst: Don’t forget to upload the fresh copy of your new repo back up to git:
 
