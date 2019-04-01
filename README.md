@@ -27,7 +27,10 @@ Start WSGI Server
 > (microservice-py)$ gunicorn 'service.microservice:start_service()'
 
 Run Pytest
-> (microservice-py)$ pytest tests
+> (microservice-py)$ python -m pytest tests
+
+Get code coverage report
+> (microservice-py)$ python -m pytest --cov=service tests/ 
 
 Open with cURL or web browser
 > $curl http://127.0.0.1:8000/welcome

@@ -55,7 +55,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest tests
+            python -m pytest --cov=service tests/  --cov-fail-under=100
 
       - store_artifacts:
           path: test-reports
