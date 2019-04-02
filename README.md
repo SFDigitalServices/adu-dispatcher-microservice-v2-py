@@ -1,4 +1,4 @@
-# SFDS microservice.py [![CircleCI](https://circleci.com/gh/SFDigitalServices/microservice-py.svg?style=svg)](https://circleci.com/gh/SFDigitalServices/microservice-py) [![Coverage Status](https://coveralls.io/repos/github/SFDigitalServices/microservice-py/badge.svg?branch=master)](https://coveralls.io/github/SFDigitalServices/microservice-py?branch=master)
+# SFDS microservice.py [![CircleCI](https://badgen.net/circleci/github/SFDigitalServices/microservice-py/master)](https://circleci.com/gh/SFDigitalServices/microservice-py) [![Coverage Status](https://coveralls.io/repos/github/SFDigitalServices/microservice-py/badge.svg?branch=master)](https://coveralls.io/github/SFDigitalServices/microservice-py?branch=master)
 SFDS microservice.py jumpstarts your next python-based microservice. It consists of a skeleton boilerplate make up of
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
 * [gunicorn](https://gunicorn.org/): Python WSGI HTTP Server for UNIX
