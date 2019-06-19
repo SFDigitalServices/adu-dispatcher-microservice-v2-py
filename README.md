@@ -61,6 +61,7 @@ Psst: Don’t forget to upload the fresh copy of your new repo back up to git:
 
 > $ git push origin master
 
-
-
-
+## Troubleshooting
+* CircleCI builds fail when trying to run coveralls.
+    1. Log into coveralls.io to obtain the coverall token for your repo.
+    2. Create an environment variable in CircleCI with the name COVERALLS_REPO_TOKEN and the coverall token value.
