@@ -61,7 +61,15 @@ Psst: Don’t forget to upload the fresh copy of your new repo back up to git:
 
 > $ git push origin master
 
-## Troubleshooting
+## Development 
+Auto-reload on code changes
+> $ pipenv run gunicorn --reload 'service.microservice:start_service()'
+
+Code coverage command with missing statement line numbers  
+> $ pipenv run python -m pytest --cov=service tests/ --cov-report term-missing
+
+
+## Continuous integration
 * CircleCI builds fail when trying to run coveralls.
     1. Log into coveralls.io to obtain the coverall token for your repo.
     2. Create an environment variable in CircleCI with the name COVERALLS_REPO_TOKEN and the coverall token value.
