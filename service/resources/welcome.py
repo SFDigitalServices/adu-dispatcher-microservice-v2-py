@@ -1,4 +1,5 @@
 """Welcome example module"""
+#pylint: disable=too-few-public-methods
 import json
 import falcon
 import jsend
@@ -8,6 +9,7 @@ from .hooks import validate_access
 class Welcome():
     """Welcome class"""
     def on_get(self, _req, resp):
+        #pylint: disable=no-self-use
         """on get request
         return Welcome message
         """

@@ -1,0 +1,9 @@
+-   repo: local
+    hooks:
+    - id: pylint
+      name: pylint
+      language: system
+      types: [python]
+      # pylint fails on use of constants in falcon 2
+      # https://github.com/falconry/falcon/issues/1553
+      entry: "pipenv run pylint --extension-pkg-whitelist=falcon"
