@@ -68,6 +68,9 @@ Auto-reload on code changes
 Code coverage command with missing statement line numbers  
 > $ pipenv run python -m pytest --cov=service tests/ --cov-report term-missing
 
+Set up git hook scripts with pre-commit
+> $ pipenv run pre-commit install
+
 
 ## Continuous integration
 * CircleCI builds fail when trying to run coveralls.
