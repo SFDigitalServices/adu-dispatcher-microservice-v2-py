@@ -1,4 +1,4 @@
-# SFDS microservice.py [![CircleCI](https://badgen.net/circleci/github/SFDigitalServices/microservice-py/master)](https://circleci.com/gh/SFDigitalServices/microservice-py) [![Coverage Status](https://coveralls.io/repos/github/SFDigitalServices/microservice-py/badge.svg?branch=master)](https://coveralls.io/github/SFDigitalServices/microservice-py?branch=master)
+# SFDS microservice.py [![CircleCI](https://badgen.net/circleci/github/SFDigitalServices/microservice-py/main)](https://circleci.com/gh/SFDigitalServices/microservice-py) [![Coverage Status](https://coveralls.io/repos/github/SFDigitalServices/microservice-py/badge.svg?branch=main)](https://coveralls.io/github/SFDigitalServices/microservice-py?branch=main)
 SFDS microservice.py jumpstarts your next python-based microservice. It consists of a skeleton boilerplate make up of
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
 * [gunicorn](https://gunicorn.org/): Python WSGI HTTP Server for UNIX
@@ -50,16 +50,16 @@ While this technically isn’t forking, its basically the same thing. What you w
 The last step is to pull down a complete copy of the original repo:
 > $ git fetch upstream
 
-> $ git merge upstream/master
+> $ git merge upstream/main
 
 Or, an easier way:
-> $ git pull upstream master
+> $ git pull upstream main
 
-Now, you can work on your new repo to your hearts content. If any changes are made to the original repo, simply execute a `git pull upstream master` and your new repo will receive the updates that were made to the original!
+Now, you can work on your new repo to your hearts content. If any changes are made to the original repo, simply execute a `git pull upstream main` and your new repo will receive the updates that were made to the original!
 
 Psst: Don’t forget to upload the fresh copy of your new repo back up to git:
 
-> $ git push origin master
+> $ git push origin main
 
 ## Development 
 Auto-reload on code changes
