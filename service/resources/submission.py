@@ -29,6 +29,9 @@ class Submission():
             if 'id' in data_json:
                 # get submission json
                 submission_id = data_json['id']
+                accela_prj = "" # placeholder accela_prj variable
+                accela_sys_id = "" # placeholder accela_sys_id variable
+
                 submission_json = Formio.get_formio_submission_by_id(
                     submission_id, form_id=os.environ.get('FORMIO_FORM_ID_ADU'))
                 msg = submission_json
@@ -40,12 +43,21 @@ class Submission():
                     'SUBMISSION_DATE':submission_json['created']})
                 msg = {'airtable': airtable.get_all()}
 
-                # transform submission
+                # get record template
+                with open('service/templates/accela_submission.json', 'r') as file_obj:
+                    template_record = json.load(file_obj)
+
+                if template_record:
+                    msg = template_record
 
                 resp.body = json.dumps(jsend.success(msg))
                 resp.status = falcon.HTTP_200
                 sentry_sdk.capture_message(
-                    'ADU Intake {submission_id}'.format(submission_id=submission_id), 'info')
+                    'ADU Intake {submission_id} {accela_prj} {accela_sys_id}'.format(
+                        submission_id=submission_id,
+                        accela_prj=accela_prj,
+                        accela_sys_id=accela_sys_id
+                    ), 'info')
                 return
 
         # catch-all
