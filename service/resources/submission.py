@@ -9,6 +9,7 @@ import sentry_sdk
 from airtable import Airtable
 from .hooks import validate_access
 from ..modules.formio import Formio
+from ..transforms.submission_transform import SubmissionTransform
 
 @falcon.before(validate_access)
 class Submission():
@@ -29,7 +30,7 @@ class Submission():
             if 'id' in data_json:
                 # get submission json
                 submission_id = data_json['id']
-                accela_prj = "" # placeholder accela_prj variable
+                accela_prj_id = "" # placeholder accela_prj variable
                 accela_sys_id = "" # placeholder accela_sys_id variable
 
                 submission_json = Formio.get_formio_submission_by_id(
@@ -40,22 +41,24 @@ class Submission():
                 airtable = self.get_airtable()
                 airtable.insert({
                     'FORMIO_ID': submission_id,
-                    'SUBMISSION_DATE':submission_json['created']})
+                    'SUBMISSION_DATE': submission_json['created'],
+                    'PROJECT_ADDRESS': submission_json['data']['projectAddress'],
+                    'FIRST_NAME': submission_json['data']['firstName'],
+                    'LAST_NAME': submission_json['data']['lastName'],
+                    'EMAIL': submission_json['data']['email']
+                })
                 msg = {'airtable': airtable.get_all()}
 
-                # get record template
-                with open('service/templates/accela_submission.json', 'r') as file_obj:
-                    template_record = json.load(file_obj)
-
-                if template_record:
-                    msg = template_record
+                # transform submission into record
+                record_json = SubmissionTransform().transform(submission_json)
+                msg = record_json
 
                 resp.body = json.dumps(jsend.success(msg))
                 resp.status = falcon.HTTP_200
                 sentry_sdk.capture_message(
-                    'ADU Intake {submission_id} {accela_prj} {accela_sys_id}'.format(
+                    'ADU Intake {submission_id} {accela_prj_id} {accela_sys_id}'.format(
                         submission_id=submission_id,
-                        accela_prj=accela_prj,
+                        accela_prj_id=accela_prj_id,
                         accela_sys_id=accela_sys_id
                     ), 'info')
                 return

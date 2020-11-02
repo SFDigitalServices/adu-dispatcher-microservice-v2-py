@@ -4,46 +4,14 @@
     },
     "name": "",
     "description": "",
+    "addresses" : [],
     "parcels": [
         {
             "parcelNumber": ""
         }
     ],
     "comments": [],
-    "customForms": [
-        {
-            "id": "PLN_PRJ-ENTITLEMENT.cTYPE",
-            "Job Value": ""
-        },
-        {
-            "id": "PLN_PRJ-PROJECT.cDESCRIPTION",
-            "Additions": "",
-            "New Construction": ""
-        },
-        {
-            "id": "PLN_PRJ-RESIDENTIAL.cTYPE",
-            "Change of Dwelling Units": "",
-            "Accessory Dwelling Unit": "CHECKED"
-        }
-    ],
-    "customTables": [
-        {
-            "id": "PLN_PRJ-PROJECT.cFEATURES",
-            "rows": [
-                {
-                    "action": "add",
-                    "fields": {
-                        "Project Feature": "Dwelling Units-Market Rate",
-                        "Proposed Unit(s)": "",
-                        "Existing Unit(s)": ""
-                    }
-                }
-            ]
-        },
-        {
-            "id": "PLN_PRJ-LAND.cUSE.c.1.cRESIDENTIAL",
-            "rows": []
-        }
-    ],
+    "customForms": [],
+    "customTables": [],
     "contacts": []
 }
