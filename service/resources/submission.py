@@ -8,11 +8,13 @@ import falcon
 import jsend
 import sentry_sdk
 import requests
+from .dispatch_email import Email
 from .hooks import validate_access
 from ..modules.util import timer
 from ..modules.formio import Formio
 from ..modules.common import get_airtable
 from ..transforms.submission_transform import SubmissionTransform
+
 
 
 @falcon.before(validate_access)
@@ -55,6 +57,16 @@ class Submission():
 
                     self.update_submission_airtable(airtable, airtable_id, content_json)
 
+                    emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+
+                    response_emails = self.send_email_to_accela(
+                        content_json['result']['id'], emails_sent['EMAILS'])
+
+                    with sentry_sdk.configure_scope() as scope:
+                        scope.set_extra('accela_re_emails_status_code', response_emails.status_code)
+                        scope.set_extra('accela_re_emails_json', response_emails.json())
+
+                    content_json['result']['emails'] = response_emails.json()
                     msg = content_json
 
                     resp.body = json.dumps(jsend.success(msg))
@@ -129,4 +141,19 @@ class Submission():
         data = json.dumps(record_json)
         response = requests.post(url, headers=headers, data=data, params=params)
 
+        return response
+
+    @staticmethod
+    @timer
+    def send_email_to_accela(record_id, emails):
+        """ Send record to Accela """
+        url = os.environ.get('ACCELA_MS_BASE_URL') + '/records/' + record_id + '/comments'
+        headers = {
+            'X-SFDS-APIKEY': os.environ.get('ACCELA_MS_APIKEY'),
+            'X-ACCELA-ENV': os.environ.get('ACCELA_ENV'),
+            'X-ACCELA-USERNAME': os.environ.get('ACCELA_USERNAME')
+        }
+        params = {}
+        data = json.dumps(emails)
+        response = requests.put(url, headers=headers, data=data, params=params)
         return response

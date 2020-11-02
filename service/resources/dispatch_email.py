@@ -33,26 +33,14 @@ class Email():
 
                 # init airtable
                 airtable_id = data_json['airtable_record_id']
-                airtable = get_airtable()
 
-                row = airtable.get(airtable_id)
-
-                msg = {'airtable': row}
-
-                prj_number = row['fields']['ACCELA_PRJ_ID']
-
-                self.email_applicant(
-                    row['fields']['EMAIL'],
-                    prj_number,
-                    row['fields']['PROJECT_ADDRESS'],
-                    row['fields']['FIRST_NAME']+ ' ' +row['fields']['LAST_NAME'],
-                    row['fields']['ACCELA_SYS_ID'])
-                self.email_staff(prj_number, row['fields']['PROJECT_ADDRESS'], row['fields']['SUBMISSION_DATE'])
+                emails_sent = self.send_submission_email_by_airtable_id(airtable_id)
+                msg = emails_sent
 
                 resp.body = json.dumps(jsend.success(msg))
                 resp.status = falcon.HTTP_200
 
-                sentry_sdk.capture_message('ADU Inake Email Sent '+prj_number, 'info')
+                sentry_sdk.capture_message('ADU Inake Email Sent '+emails_sent['PRJ_NUMBER'], 'info')
                 return
             #pylint: disable=broad-except
             except Exception as exception:
@@ -64,6 +52,34 @@ class Email():
         resp.status = falcon.HTTP_500
         resp.body = json.dumps(jsend.error(msg))
         sentry_sdk.capture_message('ADU Inake Email Error', 'error')
+
+    @staticmethod
+    def send_submission_email_by_airtable_id(airtable_id):
+        """ send emails by airtable_id """
+        airtable = get_airtable()
+        row = airtable.get(airtable_id)
+        prj_number = row['fields']['ACCELA_PRJ_ID']
+
+        applicant_email_text = Email.email_applicant(
+            row['fields']['EMAIL'],
+            prj_number,
+            row['fields']['PROJECT_ADDRESS'],
+            row['fields']['FIRST_NAME']+ ' ' +row['fields']['LAST_NAME'],
+            row['fields']['ACCELA_SYS_ID'])
+        staff_email_text = Email.email_staff(
+            prj_number,
+            row['fields']['PROJECT_ADDRESS'],
+            row['fields']['SUBMISSION_DATE'])
+
+        emails = [
+            {
+                "text": applicant_email_text
+            },
+            {
+                "text": staff_email_text
+            }
+        ]
+        return {'PRJ_NUMBER': prj_number, 'EMAILS': emails}
 
     @staticmethod
     def get_email_text(template, substitutions):
@@ -89,6 +105,8 @@ class Email():
             project_address=project_address)
 
         email(os.environ.get('EMAIL_STAFF'), subject, substitutions, html_template, text_template)
+
+        return Email.get_email_text('email_staff', substitutions)
 
     @staticmethod
     def get_staff_email_substitutions(prj_number, project_address, submission_date_iso):
@@ -139,3 +157,5 @@ class Email():
             project_address=project_address)
 
         email(applicant_email, subject, substitutions, html_template, text_template)
+
+        return Email.get_email_text('email_applicant', substitutions)

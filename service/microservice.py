@@ -6,7 +6,7 @@ import sentry_sdk
 import falcon
 from .resources.welcome import Welcome
 from .resources.submission import Submission
-from .resources.email import Email
+from .resources.dispatch_email import Email
 
 def start_service():
     """Start this service

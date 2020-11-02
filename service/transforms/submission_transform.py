@@ -28,16 +28,16 @@ class SubmissionTransform(TransformBase):
 
         # address
         address = {
-			"streetName": data['projectAddressStreetName'],
-			"streetStart": data['projectAddressNumber'],
-			"postalCode": data['projectAddressZip'],
-			"streetSuffix": {
-				"text": data['projectAddressStreetType'],
-				"value": data['projectAddressStreetType']
-			},
+            "streetName": data['projectAddressStreetName'],
+            "streetStart": data['projectAddressNumber'],
+            "postalCode": data['projectAddressZip'],
+            "streetSuffix": {
+                "text": data['projectAddressStreetType'],
+                "value": data['projectAddressStreetType']
+            },
             "unitStart": data['projectAddressUnitNumber'],
-			"neighborhood": parcel
-		}
+            "neighborhood": parcel
+        }
         record['addresses'].append(address)
 
         # PLN_PRJ-ENTITLEMENT.cTYPE
@@ -98,15 +98,15 @@ class SubmissionTransform(TransformBase):
                 "3Bedroom": "ADU Three Bedroom (and +)"
             }
             adu = {
-					"action" : "add",
-					"fields": {
-						"Dwelling Unit Type": adu_type_map[row['proposedUnitType']],
-						"Proposed": "1",
-						"Existing": "0",
-                        "Net": "1",
-						"ADU Area": row['proposedSquareFootage']
-					}
-				}
+                "action" : "add",
+                "fields": {
+                    "Dwelling Unit Type": adu_type_map[row['proposedUnitType']],
+                    "Proposed": "1",
+                    "Existing": "0",
+                    "Net": "1",
+                    "ADU Area": row['proposedSquareFootage']
+                }
+            }
             proj_residential['rows'].append(adu)
 
         record['customTables'].append(proj_residential)
@@ -158,13 +158,13 @@ class SubmissionTransform(TransformBase):
             if upload_field in data:
                 upload_line = upload_map[upload_field] + ': '
                 upload_line += os.environ.get('UPLOAD_HOST') + '/' + data[upload_field][0]['key']
-                comment_upload += upload_line + ' \n'
+                comment_upload += upload_line + ' \n\n'
 
         comment_upload += 'Plans : \n'
         for plan in data['uploadPlans']:
             upload_line = '* ' + os.environ.get('UPLOAD_HOST') + '/' + plan['key']
-            comment_upload += upload_line + ' \n'
+            comment_upload += upload_line + ' \n\n'
 
-        record['comments'].append(comment_upload)
+        record['comments'].append({"text": comment_upload})
 
         return record
