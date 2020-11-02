@@ -135,7 +135,7 @@ class SubmissionTransform(TransformBase):
             }
         }
 
-        if data['billingFirstName'] and data['billingLastName']:
+        if 'billingFirstName' in data and 'billingLastName' in data:
             contact_billing['firstName'] = data['billingFirstName']
             contact_billing['lastName'] = data['billingLastName']
             contact_billing['email'] = data['billingEmail']
@@ -155,7 +155,7 @@ class SubmissionTransform(TransformBase):
             "uploadTreePlantingChecklist" : "Tree planting and protection checklist"
         }
         for upload_field in upload_map:
-            if upload_field in data:
+            if upload_field in data and len(data[upload_field]) > 0:
                 upload_line = upload_map[upload_field] + ': '
                 upload_line += os.environ.get('UPLOAD_HOST') + '/' + data[upload_field][0]['key']
                 comment_upload += upload_line + ' \n\n'
