@@ -40,9 +40,6 @@ class Submission():
 
                 submission_json = self.get_submssion_json(submission_id)
 
-                ### HOT FIX FOR TESTING
-                submission_json['data']['projectAddress'] = "TEST " + submission_json['data']['projectAddress']
-
                 # init airtable
                 airtable = get_airtable()
                 # log submission
