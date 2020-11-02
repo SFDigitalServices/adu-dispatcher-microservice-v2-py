@@ -21,9 +21,9 @@ def email(email_to, subject, substitutions, html_content, text_content):
     # create our To list to pass to our mail object
     # the substitutions in this list are the dynamic HTML values
     to_email = To(
-            email=email_to,
-            substitutions=substitutions
-        )
+        email=email_to,
+        substitutions=substitutions
+    )
 
     # create our Mail object and populate dynamically with our to_emails
     message = Mail(
@@ -47,3 +47,14 @@ def email(email_to, subject, substitutions, html_content, text_content):
     except Exception as ex:
         print("Error: {0}".format(ex))
     return str(response.status_code)
+
+def get_accela_link_by_id(accela_sys_id):
+    """ Get accela link by Accela system id """
+    accela_sys_caps = accela_sys_id.split('-')
+    accela_link = "{accela_url}&capID1={cap1}&capID2={cap2}&capID3={cap3}".format(
+        accela_url=os.environ.get('ACCELA_URL'),
+        cap1=accela_sys_caps[1],
+        cap2=accela_sys_caps[2],
+        cap3=accela_sys_caps[3],
+    )
+    return accela_link

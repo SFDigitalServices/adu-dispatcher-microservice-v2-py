@@ -9,7 +9,7 @@ import pytz
 import falcon
 import sentry_sdk
 import jsend
-from ..modules.common import get_airtable, email
+from ..modules.common import get_airtable, email, get_accela_link_by_id
 
 ERROR_GENERIC = "Bad Request"
 ERROR_401 = "Unauthorized"
@@ -69,7 +69,8 @@ class Email():
         staff_email_text = Email.email_staff(
             prj_number,
             row['fields']['PROJECT_ADDRESS'],
-            row['fields']['SUBMISSION_DATE'])
+            row['fields']['SUBMISSION_DATE'],
+            row['fields']['ACCELA_SYS_ID'])
 
         emails = [
             {
@@ -91,10 +92,10 @@ class Email():
         return text_content
 
     @staticmethod
-    def email_staff(prj_number, project_address, submission_date_iso):
+    def email_staff(prj_number, project_address, submission_date_iso, accela_sys_id):
         """ Staff email """
         substitutions = Email.get_staff_email_substitutions(
-            prj_number, project_address, submission_date_iso)
+            prj_number, project_address, submission_date_iso, accela_sys_id)
         with open('service/templates/email_staff.html', 'r') as file_obj:
             html_template = file_obj.read()
 
@@ -109,7 +110,8 @@ class Email():
         return Email.get_email_text('email_staff', substitutions)
 
     @staticmethod
-    def get_staff_email_substitutions(prj_number, project_address, submission_date_iso):
+    #pylint: disable=line-too-long
+    def get_staff_email_substitutions(prj_number, project_address, submission_date_iso, accela_sys_id):
         """ get email substitution for staff """
         timezone = pytz.timezone('America/Los_Angeles')
         #pylint: disable=line-too-long
@@ -118,7 +120,8 @@ class Email():
         substitutions = {
             '-prj_number-': prj_number,
             '-proj_address-': project_address,
-            '-submission_date-': submission_date
+            '-submission_date-': submission_date,
+            '-accela_link-':get_accela_link_by_id(accela_sys_id)
         }
         return substitutions
 
@@ -126,18 +129,11 @@ class Email():
     #pylint: disable=line-too-long
     def get_applicant_email_substitutions(prj_number, project_address, applicant_name, accela_sys_id):
         """ get email substitution for applicant """
-        accela_sys_caps = accela_sys_id.split('-')
-        accela_link = "{accela_url}&capID1={cap1}&capID2={cap2}&capID3={cap3}".format(
-            accela_url=os.environ.get('ACCELA_URL'),
-            cap1=accela_sys_caps[1],
-            cap2=accela_sys_caps[2],
-            cap3=accela_sys_caps[3],
-        )
         substitutions = {
             '-applicant_name-': applicant_name,
             '-prj_number-': prj_number,
             '-proj_address-': project_address,
-            '-accela_link-': accela_link,
+            '-accela_link-':get_accela_link_by_id(accela_sys_id)
         }
         return substitutions
 
