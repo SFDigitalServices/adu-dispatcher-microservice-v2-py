@@ -9,7 +9,7 @@ import pytz
 import falcon
 import sentry_sdk
 import jsend
-from ..modules.common import get_airtable,email
+from ..modules.common import get_airtable, email
 
 ERROR_GENERIC = "Bad Request"
 ERROR_401 = "Unauthorized"
@@ -40,15 +40,9 @@ class Email():
                 msg = {'airtable': row}
 
                 prj_number = row['fields']['ACCELA_PRJ_ID']
-                #staff_sub = self.get_staff_email_substitutions(prj_number, row['fields']['PROJECT_ADDRESS'], row['fields']['SUBMISSION_DATE'])
-                # applicant_sub = self.get_applicant_email_substitutions(prj_number,
-                # row['fields']['PROJECT_ADDRESS'],
-                # row['fields']['FIRST_NAME']+ ' ' +row['fields']['LAST_NAME'],
-                # row['fields']['ACCELA_SYS_ID'])
-                # msg = self.get_email_text('email_applicant', applicant_sub)
-                # print(msg)
 
-                self.email_applicant(row['fields']['EMAIL'],
+                self.email_applicant(
+                    row['fields']['EMAIL'],
                     prj_number,
                     row['fields']['PROJECT_ADDRESS'],
                     row['fields']['FIRST_NAME']+ ' ' +row['fields']['LAST_NAME'],
@@ -104,9 +98,9 @@ class Email():
         submission_date_obj = datetime.datetime.fromisoformat(submission_date_iso[:-1]).replace(tzinfo=pytz.utc)
         submission_date = submission_date_obj.astimezone(timezone).strftime('%Y-%m-%d %I:%M %p')
         substitutions = {
-                '-prj_number-': prj_number,
-                '-proj_address-': project_address,
-                '-submission_date-': submission_date
+            '-prj_number-': prj_number,
+            '-proj_address-': project_address,
+            '-submission_date-': submission_date
         }
         return substitutions
 
@@ -122,11 +116,10 @@ class Email():
             cap3=accela_sys_caps[3],
         )
         substitutions = {
-                '-applicant_name-': applicant_name,
-                '-prj_number-': prj_number,
-                '-proj_address-': project_address,
-                '-accela_link-': accela_link,
-
+            '-applicant_name-': applicant_name,
+            '-prj_number-': prj_number,
+            '-proj_address-': project_address,
+            '-accela_link-': accela_link,
         }
         return substitutions
 

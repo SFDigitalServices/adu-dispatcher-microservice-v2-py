@@ -86,14 +86,14 @@ class Submission():
     def create_submission_airtable(airtable, submission_id, submission_json):
         """ Create submission into AirTable """
         return airtable.insert({
-                    'FORMIO_ID': submission_id,
-                    'SUBMISSION_DATE': submission_json['created'],
-                    'PROJECT_ADDRESS': submission_json['data']['projectAddress'],
-                    'FIRST_NAME': submission_json['data']['firstName'],
-                    'LAST_NAME': submission_json['data']['lastName'],
-                    'EMAIL': submission_json['data']['email'],
-                    'ACCELA_ENV': os.environ.get('ACCELA_ENV')
-                })
+            'FORMIO_ID': submission_id,
+            'SUBMISSION_DATE': submission_json['created'],
+            'PROJECT_ADDRESS': submission_json['data']['projectAddress'],
+            'FIRST_NAME': submission_json['data']['firstName'],
+            'LAST_NAME': submission_json['data']['lastName'],
+            'EMAIL': submission_json['data']['email'],
+            'ACCELA_ENV': os.environ.get('ACCELA_ENV')
+        })
 
     @staticmethod
     @timer
@@ -112,7 +112,7 @@ class Submission():
     def get_submssion_json(submission_id):
         """ Get Submission JSON """
         submission_json = Formio.get_formio_submission_by_id(
-                    submission_id, form_id=os.environ.get('FORMIO_FORM_ID_ADU'))
+            submission_id, form_id=os.environ.get('FORMIO_FORM_ID_ADU'))
         return submission_json
 
     @staticmethod
