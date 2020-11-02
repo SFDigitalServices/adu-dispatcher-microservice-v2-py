@@ -14,8 +14,10 @@ sentry-sdk = "*"
 pytest = "*"
 pytest-cov = "*"
 pre-commit = "*"
-pylint = "*"
+pylint = "==2.4.*"
 airtable-python-wrapper = "*"
+pytz = "*"
+sendgrid = "*"
 
 [requires]
 python_version = "3.7"

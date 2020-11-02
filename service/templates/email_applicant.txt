@@ -1,0 +1,14 @@
+Dear -applicant_name-,
+ 
+Thank you for submitting your ADU application for -proj_address-. See your submitted application in Accela at -accela_link-
+ 
+Your planning application number is -prj_number-
+ 
+Use it to track your application in the Planning Applications tab in our Property Information Map (PIM) at https://sfplanninggis.org/pim/. It will take 1 day for your record to appear in PIM.
+ 
+A planner will email you about next steps, including how to pay the intake fee, within 14 days.
+ 
+Find more information about ADUs at SF Planning https://sfplanning.org/accessory-dwelling-units.
+ 
+Thank you,
+SF Planning

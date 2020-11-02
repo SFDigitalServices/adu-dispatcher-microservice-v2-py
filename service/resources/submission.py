@@ -8,10 +8,10 @@ import falcon
 import jsend
 import sentry_sdk
 import requests
-from airtable import Airtable
 from .hooks import validate_access
 from ..modules.util import timer
 from ..modules.formio import Formio
+from ..modules.common import get_airtable
 from ..transforms.submission_transform import SubmissionTransform
 
 
@@ -26,7 +26,6 @@ class Submission():
         if req.content_length:
             data = req.stream.read(sys.maxsize)
             data_json = json.loads(data)
-            msg = data_json
 
             with sentry_sdk.configure_scope() as scope:
                 scope.set_extra('data_json', data_json)
@@ -40,7 +39,7 @@ class Submission():
                 submission_json = self.get_submssion_json(submission_id)
 
                 # init airtable
-                airtable = self.get_airtable()
+                airtable = get_airtable()
                 # log submission
                 insert = self.create_submission_airtable(airtable, submission_id, submission_json)
                 airtable_id = insert["id"]
@@ -81,15 +80,6 @@ class Submission():
         resp.body = json.dumps(jsend.error(msg))
         sentry_sdk.capture_message('ADU Inake Error', 'error')
         return
-
-    @staticmethod
-    @timer
-    def get_airtable():
-        """ Get airtable """
-        return Airtable(
-            os.environ.get('AIRTABLE_SUBMISSION_BASE_KEY'),
-            os.environ.get('AIRTABLE_SUBMISSION_TABLE_NAME'),
-            os.environ.get('AIRTABLE_API_KEY'))
 
     @staticmethod
     @timer
