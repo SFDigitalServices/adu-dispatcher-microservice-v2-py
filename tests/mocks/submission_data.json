@@ -1,0 +1,84 @@
+{
+    "data": {
+        "firstName": "Test First Name",
+        "lastName": "Test Last Name",
+        "phoneNumber": "(415) 111-1111",
+        "email": "test@test.com",
+        "hasOwnerAuthorized": "yes",
+        "projectAddress": "123 MAIN ST",
+        "projectAddressNumber": "123",
+        "projectAddressNumberSuffix": "",
+        "projectAddressStreetName": "MAIN",
+        "projectAddressStreetType": "ST",
+        "projectAddressUnitNumber": "",
+        "projectAddressBlock": "1234",
+        "projectAddressLot": "567",
+        "projectAddressZip": "94000",
+        "isWithinExistingBuilding": "no",
+        "proposedAdUs": [
+            {
+                "proposedUnitType": "Studio",
+                "proposedSquareFootage": 300
+            },
+            {
+                "proposedUnitType": "1Bedroom",
+                "proposedSquareFootage": 400
+            },
+            {
+                "proposedUnitType": "2Bedroom",
+                "proposedSquareFootage": 500
+            },
+            {
+                "proposedUnitType": "3Bedroom",
+                "proposedSquareFootage": 600
+            }
+        ],
+        "contactPermitFees": "other",
+        "uploadPRJ": [
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "uploadADUChecklist": [
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "uploadADUScreening": [
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "uploadFixtureCount": [
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "uploadStreetTree": [
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "uploadTreePlantingChecklist": [
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "uploadPlans": [
+            {
+                "key": "test.pdf"
+            },
+            {
+                "key": "test.pdf"
+            }
+        ],
+        "estimatedConstructionCost": 1000,
+        "whereProposedAduLocated": "addition",
+        "existingDwellingUnits": 2,
+        "newDwellingUnits": 3,
+        "billingFirstName": "test",
+        "billingLastName": "test",
+        "billingPhoneNumber": "(111) 111-1111",
+        "billingEmail": "test@test.test"
+    }
+}

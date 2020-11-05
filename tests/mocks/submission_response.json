@@ -1,0 +1,27 @@
+{
+    "status": "success",
+    "data": {
+        "result": {
+            "name": "",
+            "id": "",
+            "customId": ""
+        },
+        "status": 200,
+        "customForms": {
+            "status": 200,
+            "result": []
+        },
+        "customTables": {
+            "status": 200,
+            "result": []
+        },
+        "comments": {
+            "status": 200,
+            "result": []
+        },
+        "emails": {
+            "status": 200,
+            "result": []
+        }
+    }
+}

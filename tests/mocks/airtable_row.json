@@ -1,0 +1,14 @@
+{
+    "id": "recABC",
+    "fields": {
+        "FORMIO_ID": "123",
+        "SUBMISSION_DATE": "2020-11-01T01:01:11.123Z",
+        "ACCELA_PRJ_ID": "2020-000001PRJ",
+        "ACCELA_SYS_ID": "TEST-000-000-000",
+        "PROJECT_ADDRESS": "123 MAIN ST",
+        "FIRST_NAME": "First",
+        "LAST_NAME": "Last",
+        "EMAIL": "noreply@sf.gov",
+        "AIRTABLE_ID": "recABC"
+    }
+}
