@@ -66,7 +66,7 @@ class Submission():
                         scope.set_extra('accela_re_emails_status_code', response_emails.status_code)
                         scope.set_extra('accela_re_emails_json', response_emails.json())
 
-                    content_json['result']['emails'] = response_emails.json()
+                    content_json['emails'] = response_emails.json()
                     msg = content_json
 
                     resp.body = json.dumps(jsend.success(msg))
