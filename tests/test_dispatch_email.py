@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 from falcon import testing
 import service.microservice
-from service.modules.common import assert_mock
+from common import assert_mock
 
 @pytest.fixture()
 def client():
