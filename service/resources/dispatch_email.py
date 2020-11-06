@@ -35,9 +35,8 @@ class Email():
                 airtable_id = data_json['airtable_record_id']
 
                 emails_sent = self.send_submission_email_by_airtable_id(airtable_id)
-                msg = emails_sent
 
-                resp.body = json.dumps(jsend.success(msg))
+                resp.body = json.dumps(jsend.success(emails_sent))
                 resp.status = falcon.HTTP_200
 
                 sentry_sdk.capture_message('ADU Inake Email Sent '+emails_sent['PRJ_NUMBER'], 'info')
