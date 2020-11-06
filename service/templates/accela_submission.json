@@ -1,0 +1,17 @@
+{
+    "type": {
+        "id": "Planning-Project-Project-PRJ"
+    },
+    "name": "",
+    "description": "",
+    "addresses" : [],
+    "parcels": [
+        {
+            "parcelNumber": ""
+        }
+    ],
+    "comments": [],
+    "customForms": [],
+    "customTables": [],
+    "contacts": []
+}

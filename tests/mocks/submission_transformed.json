@@ -1,0 +1,128 @@
+{
+    "type": {
+        "id": "Planning-Project-Project-PRJ"
+    },
+    "name": "123 MAIN ST",
+    "description": "",
+    "addresses": [
+        {
+            "streetName": "MAIN",
+            "streetStart": "123",
+            "postalCode": "94000",
+            "streetSuffix": {
+                "text": "ST",
+                "value": "ST"
+            },
+            "unitStart": "",
+            "neighborhood": "1234567"
+        }
+    ],
+    "parcels": [
+        {
+            "parcelNumber": "1234567"
+        }
+    ],
+    "comments": [
+        {
+            "text": "PRJ application: https://localhost/test.pdf \n\nADU checklist: https://localhost/test.pdf \n\nADU screening form: https://localhost/test.pdf \n\nFixture Count form: https://localhost/test.pdf \n\nStreet tree application and guidelines: https://localhost/test.pdf \n\nTree planting and protection checklist: https://localhost/test.pdf \n\nPlans : \n* https://localhost/test.pdf \n\n* https://localhost/test.pdf \n\n"
+        }
+    ],
+    "customForms": [
+        {
+            "id": "PLN_PRJ-ENTITLEMENT.cTYPE",
+            "Job Value": 1000
+        },
+        {
+            "id": "PLN_PRJ-PROJECT.cDESCRIPTION",
+            "Additions": "CHECKED",
+            "New Construction": ""
+        },
+        {
+            "id": "PLN_PRJ-RESIDENTIAL.cTYPE",
+            "Change of Dwelling Units": "Yes",
+            "Accessory Dwelling Unit": "CHECKED"
+        }
+    ],
+    "customTables": [
+        {
+            "id": "PLN_PRJ-PROJECT.cFEATURES",
+            "rows": [
+                {
+                    "action": "add",
+                    "fields": {
+                        "Project Feature": "Dwelling Units-Market Rate",
+                        "Proposed Unit(s)": 3,
+                        "Existing Unit(s)": 2
+                    }
+                }
+            ]
+        },
+        {
+            "id": "PLN_PRJ-LAND.cUSE.c.1.cRESIDENTIAL",
+            "rows": [
+                {
+                    "action": "add",
+                    "fields": {
+                        "Dwelling Unit Type": "ADU Studio",
+                        "Proposed": "1",
+                        "Existing": "0",
+                        "Net": "1",
+                        "ADU Area": 300
+                    }
+                },
+                {
+                    "action": "add",
+                    "fields": {
+                        "Dwelling Unit Type": "ADU One Bedroom",
+                        "Proposed": "1",
+                        "Existing": "0",
+                        "Net": "1",
+                        "ADU Area": 400
+                    }
+                },
+                {
+                    "action": "add",
+                    "fields": {
+                        "Dwelling Unit Type": "ADU Two Bedroom",
+                        "Proposed": "1",
+                        "Existing": "0",
+                        "Net": "1",
+                        "ADU Area": 500
+                    }
+                },
+                {
+                    "action": "add",
+                    "fields": {
+                        "Dwelling Unit Type": "ADU Three Bedroom (and +)",
+                        "Proposed": "1",
+                        "Existing": "0",
+                        "Net": "1",
+                        "ADU Area": 600
+                    }
+                }
+            ]
+        }
+    ],
+    "contacts": [
+        {
+            "firstName": "Test First Name",
+            "lastName": "Test Last Name",
+            "email": "test@test.com",
+            "phone1": "(415) 111-1111",
+            "type": {
+                "text": "Applicant",
+                "value": "Applicant"
+            }
+        },
+        {
+            "firstName": "test",
+            "lastName": "test",
+            "email": "test@test.test",
+            "phone1": "(111) 111-1111",
+            "type": {
+                "text": "Billing Contact",
+                "value": "Billing Contact"
+            }
+        }
+    ]
+}
