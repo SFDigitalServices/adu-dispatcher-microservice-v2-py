@@ -52,6 +52,10 @@ class Submission():
                 # send record to accela
                 response = self.send_record_to_accela(record_json)
 
+                with sentry_sdk.configure_scope() as scope:
+                    scope.set_extra('accela_resp_status_code', response.status_code)
+                    scope.set_extra('accela_resp_json', response.json())
+
                 if response.status_code == 200:
                     content_json = response.json()
 
@@ -104,6 +108,7 @@ class Submission():
             'FIRST_NAME': submission_json['data']['firstName'],
             'LAST_NAME': submission_json['data']['lastName'],
             'EMAIL': submission_json['data']['email'],
+            'NUM_PROPOSED_ADU': len(submission_json['data']['proposedAdUs']),
             'ACCELA_ENV': os.environ.get('ACCELA_ENV')
         })
 

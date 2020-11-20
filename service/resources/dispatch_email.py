@@ -69,7 +69,9 @@ class Email():
             prj_number,
             row['fields']['PROJECT_ADDRESS'],
             row['fields']['SUBMISSION_DATE'],
-            row['fields']['ACCELA_SYS_ID'])
+            row['fields']['ACCELA_SYS_ID'],
+            row['fields']['NUM_PROPOSED_ADU']
+            )
 
         emails = [
             {
@@ -91,10 +93,12 @@ class Email():
         return text_content
 
     @staticmethod
-    def email_staff(prj_number, project_address, submission_date_iso, accela_sys_id):
+    #pylint: disable=line-too-long
+    def email_staff(prj_number, project_address, submission_date_iso, accela_sys_id, num_proposed_adu):
         """ Staff email """
         substitutions = Email.get_staff_email_substitutions(
-            prj_number, project_address, submission_date_iso, accela_sys_id)
+            prj_number, project_address, submission_date_iso, accela_sys_id, num_proposed_adu)
+
         with open('service/templates/email_staff.html', 'r') as file_obj:
             html_template = file_obj.read()
 
@@ -110,7 +114,7 @@ class Email():
 
     @staticmethod
     #pylint: disable=line-too-long
-    def get_staff_email_substitutions(prj_number, project_address, submission_date_iso, accela_sys_id):
+    def get_staff_email_substitutions(prj_number, project_address, submission_date_iso, accela_sys_id, num_proposed_adu):
         """ get email substitution for staff """
         timezone = pytz.timezone('America/Los_Angeles')
         #pylint: disable=line-too-long
@@ -120,7 +124,8 @@ class Email():
             '-prj_number-': prj_number,
             '-proj_address-': project_address,
             '-submission_date-': submission_date,
-            '-accela_link-':get_accela_link_by_id(accela_sys_id)
+            '-accela_link-': get_accela_link_by_id(accela_sys_id),
+            '-num_proposed_adu-': str(num_proposed_adu)
         }
         return substitutions
 
