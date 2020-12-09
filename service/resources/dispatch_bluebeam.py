@@ -29,7 +29,7 @@ class DispatchBluebeam():
     class Webhook():
         """ Webhook endpoint """
         #pylint: disable=no-self-use, line-too-long
-        def on_post(self, req, resp):
+        def on_post(self, req, resp, airtable_id):
             """on post request
         """
             msg = ERROR_GENERIC
@@ -42,14 +42,13 @@ class DispatchBluebeam():
                     scope.set_extra('bb_webhook_json', data_json)
 
                 try:
-                    if 'airtable_record_id' not in data_json or 'result' not in data_json or 'bluebeam_project_id' not in data_json['result']:
+                    if 'data' not in data_json or 'bluebeam_project_id' not in data_json['data']:
                         raise ValueError(ERROR_GENERIC)
 
                     # init airtable
                     airtable = get_airtable()
-                    airtable_id = data_json['airtable_record_id']
-                    bluebeam_json = data_json['result']
-                    bluebeam_prj_id = data_json['result']['bluebeam_project_id']
+                    bluebeam_json = data_json['data']
+                    bluebeam_prj_id = bluebeam_json['bluebeam_project_id']
                     updated = self.update_submission_airtable_bluebeam(
                         airtable, airtable_id, bluebeam_json)
 
