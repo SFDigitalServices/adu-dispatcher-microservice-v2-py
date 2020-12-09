@@ -65,13 +65,14 @@ class Email():
             row['fields']['PROJECT_ADDRESS'],
             row['fields']['FIRST_NAME']+ ' ' +row['fields']['LAST_NAME'],
             row['fields']['ACCELA_SYS_ID'])
-        staff_email_text = Email.email_staff(
-            prj_number,
-            row['fields']['PROJECT_ADDRESS'],
-            row['fields']['SUBMISSION_DATE'],
-            row['fields']['ACCELA_SYS_ID'],
-            row['fields']['NUM_PROPOSED_ADU']
-            )
+        staff_email_text = Email.email_staff({
+            'prj_number': prj_number,
+            'project_address': row['fields']['PROJECT_ADDRESS'],
+            'submission_date_iso': row['fields']['SUBMISSION_DATE'],
+            'accela_sys_id': row['fields']['ACCELA_SYS_ID'],
+            'num_proposed_adu': row['fields']['NUM_PROPOSED_ADU'],
+            'bb_prj_id': row['fields']['BLUEBEAM_PRJ_ID']
+        })
 
         emails = [
             {
@@ -93,11 +94,10 @@ class Email():
         return text_content
 
     @staticmethod
-    #pylint: disable=line-too-long
-    def email_staff(prj_number, project_address, submission_date_iso, accela_sys_id, num_proposed_adu):
+    def email_staff(data):
         """ Staff email """
         substitutions = Email.get_staff_email_substitutions(
-            prj_number, project_address, submission_date_iso, accela_sys_id, num_proposed_adu)
+            data)
 
         with open('service/templates/email_staff.html', 'r') as file_obj:
             html_template = file_obj.read()
@@ -106,26 +106,26 @@ class Email():
             text_template = file_obj.read()
 
         subject = "New Application for ADU at {project_address}".format(
-            project_address=project_address)
+            project_address=data['project_address'])
 
         email(os.environ.get('EMAIL_STAFF'), subject, substitutions, html_template, text_template)
 
         return Email.get_email_text('email_staff', substitutions)
 
     @staticmethod
-    #pylint: disable=line-too-long
-    def get_staff_email_substitutions(prj_number, project_address, submission_date_iso, accela_sys_id, num_proposed_adu):
+    def get_staff_email_substitutions(data):
         """ get email substitution for staff """
         timezone = pytz.timezone('America/Los_Angeles')
         #pylint: disable=line-too-long
-        submission_date_obj = datetime.datetime.fromisoformat(submission_date_iso[:-1]).replace(tzinfo=pytz.utc)
+        submission_date_obj = datetime.datetime.fromisoformat(data['submission_date_iso'][:-1]).replace(tzinfo=pytz.utc)
         submission_date = submission_date_obj.astimezone(timezone).strftime('%Y-%m-%d %I:%M %p')
         substitutions = {
-            '-prj_number-': prj_number,
-            '-proj_address-': project_address,
+            '-prj_number-': data['prj_number'],
+            '-proj_address-': data['project_address'],
             '-submission_date-': submission_date,
-            '-accela_link-': get_accela_link_by_id(accela_sys_id),
-            '-num_proposed_adu-': str(num_proposed_adu)
+            '-accela_link-': get_accela_link_by_id(data['accela_sys_id']),
+            '-num_proposed_adu-': str(data['num_proposed_adu']),
+            '-bluebeam_prj_id-': data['bb_prj_id']
         }
         return substitutions
 
