@@ -20,7 +20,7 @@ def start_service():
     api.add_route('/welcome', Welcome())
     api.add_route('/submission', Submission())
     api.add_route('/email', Email())
-    api.add_route('/bluebeam/webhook/{airtable_id}', DispatchBluebeam().Webhook())
+    api.add_route('/bluebeam/webhook', DispatchBluebeam().Webhook())
     api.add_sink(default_error, '')
     return api
 

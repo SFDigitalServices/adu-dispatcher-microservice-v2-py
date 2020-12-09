@@ -29,12 +29,13 @@ class DispatchBluebeam():
     class Webhook():
         """ Webhook endpoint """
         #pylint: disable=no-self-use, line-too-long
-        def on_post(self, req, resp, airtable_id):
+        def on_post(self, req, resp):
             """on post request
         """
             msg = ERROR_GENERIC
 
-            if req.content_length:
+            if 'airtable_record_id' in req.params and req.content_length:
+                airtable_record_id = req.params['airtable_record_id']
                 data = req.stream.read(sys.maxsize)
                 data_json = json.loads(data)
 
@@ -50,7 +51,7 @@ class DispatchBluebeam():
                     bluebeam_json = data_json['data']
                     bluebeam_prj_id = bluebeam_json['bluebeam_project_id']
                     updated = self.update_submission_airtable_bluebeam(
-                        airtable, airtable_id, bluebeam_json)
+                        airtable, airtable_record_id, bluebeam_json)
 
                     with sentry_sdk.configure_scope() as scope:
                         scope.set_extra('bb_updated_json', updated)
@@ -59,7 +60,7 @@ class DispatchBluebeam():
                     send_email = bool(req.params['send_email']) if 'send_email' in req.params else False
                     if send_email:
                         accela_sys_id = updated['ACCELA_SYS_ID']
-                        emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+                        emails_sent = Email.send_submission_email_by_airtable_id(airtable_record_id)
 
                         Accela.send_email_to_accela(
                             accela_sys_id, emails_sent['EMAILS'])
