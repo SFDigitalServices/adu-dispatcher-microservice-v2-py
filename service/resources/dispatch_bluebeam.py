@@ -13,9 +13,7 @@ from .dispatch_email import Email
 from .hooks import validate_access
 from ..modules.util import timer
 from ..modules.accela import Accela
-from ..modules.formio import Formio
 from ..modules.common import get_airtable
-from ..transforms.submission_transform import SubmissionTransform
 
 ERROR_GENERIC = "Bad Request"
 
@@ -24,17 +22,106 @@ class DispatchBluebeam():
     """ Bluebeam Dispatch class """
     class Submission():
         """ Submission endpoint """
-        pass
+        def on_post(self, req, resp):
+            """on post request
+            """
+            msg = ERROR_GENERIC
+
+            if req.content_length:
+                data = req.stream.read(sys.maxsize)
+                data_json = json.loads(data)
+
+                try:
+                    if 'airtable_record_id' not in data_json:
+                        raise ValueError(ERROR_GENERIC)
+
+                    airtable_id = data_json['airtable_record_id']
+                    bluebeam_json = self.get_bluebeam_json_by_airtable_id(airtable_id)
+
+                    with sentry_sdk.configure_scope() as scope:
+                        scope.set_extra('bluebeam_json', bluebeam_json)
+
+                    if bluebeam_json:
+                        bluebeam_resp = self.send_bluebeam_submission(bluebeam_json)
+                        with sentry_sdk.configure_scope() as scope:
+                            scope.set_extra('bluebeam_resp', bluebeam_resp)
+
+                        sentry_sdk.capture_message(
+                            'ADU Inake Bluebeam Submission '+airtable_id, 'info')
+
+                        resp.body = json.dumps(jsend.success(bluebeam_resp))
+                        resp.status = falcon.HTTP_200
+                        return
+
+                #pylint: disable=broad-except
+                except Exception as exception:
+                    logging.exception('DispatchBluebeam.Submission.on_post Exception')
+                    if exception.__class__.__name__ == 'ValueError':
+                        msg = "{0}".format(exception)
+            # catch-all
+            resp.status = falcon.HTTP_500
+            resp.body = json.dumps(jsend.error(msg))
+            sentry_sdk.capture_message('ADU Inake Bluebeam Submission Error', 'error')
+
+        @staticmethod
+        @timer
+        def get_bluebeam_json_by_airtable_id(airtable_id):
+            """ Get JSON for Bluebeam microservice """
+            json_output = None
+            # init airtable
+            airtable = get_airtable()
+            row = airtable.get(airtable_id)
+            if row:
+                json_output = json.loads(row['fields']['BLUEBEAM_UPLOADS'])
+
+                # attach webhook config
+                webhook = {
+                    "type": "ADU",
+                    "params": {
+                        "send_email": 1,
+                        "airtable_record_id":airtable_id
+                    },
+                    "users": []
+                }
+                email_list = os.environ.get('BLUEBEAM_USER_EMAILS').split(",")
+                users = list(map(lambda email: {"email":email}, email_list))
+                webhook['users'] = users
+                json_output['_webhook'] = webhook
+
+            return json_output
+
+        @staticmethod
+        @timer
+        def send_bluebeam_submission(bluebeam_json):
+            """ Send submission to Bluebeam microservice for processing """
+            url = os.environ.get('BLUEBEAM_MS_URL')
+            headers = {
+                'ACCESS_KEY': os.environ.get('BLUEBEAM_MS_API_KEY')
+            }
+            params = {}
+            data = json.dumps(bluebeam_json)
+            response = requests.post(url, headers=headers, data=data, params=params)
+            response_json = None
+
+            with sentry_sdk.configure_scope() as scope:
+                scope.set_extra('send_bluebeam_submission_status_code', response.status_code)
+                scope.set_extra('send_bluebeam_submission_content', response.content)
+
+            if response.status_code == 200:
+                response_json = response.json()
+
+            return response_json
+
 
     class Webhook():
         """ Webhook endpoint """
         #pylint: disable=no-self-use, line-too-long
         def on_post(self, req, resp):
             """on post request
-        """
+            """
             msg = ERROR_GENERIC
 
-            if 'airtable_record_id' in req.params and req.content_length:
+            if req.content_length:
                 airtable_record_id = req.params['airtable_record_id']
                 data = req.stream.read(sys.maxsize)
                 data_json = json.loads(data)
@@ -43,13 +130,15 @@ class DispatchBluebeam():
                     scope.set_extra('bb_webhook_json', data_json)
 
                 try:
-                    if 'data' not in data_json or 'bluebeam_project_id' not in data_json['data']:
+                    if 'airtable_record_id' not in req.params or \
+                        'data' not in data_json or \
+                        'bluebeam_project_id' not in data_json['data']:
                         raise ValueError(ERROR_GENERIC)
 
                     # init airtable
                     airtable = get_airtable()
                     bluebeam_json = data_json['data']
-                    bluebeam_prj_id = bluebeam_json['bluebeam_project_id']
+
                     updated = self.update_submission_airtable_bluebeam(
                         airtable, airtable_record_id, bluebeam_json)
 
@@ -69,7 +158,7 @@ class DispatchBluebeam():
                     resp.status = falcon.HTTP_200
 
                     sentry_sdk.capture_message(
-                        'ADU Inake Bluebeam uploaded '+bluebeam_prj_id, 'info')
+                        'ADU Inake Bluebeam uploaded '+bluebeam_json['bluebeam_project_id'], 'info')
 
                     return
 

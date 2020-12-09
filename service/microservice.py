@@ -21,6 +21,7 @@ def start_service():
     api.add_route('/submission', Submission())
     api.add_route('/email', Email())
     api.add_route('/bluebeam/webhook', DispatchBluebeam().Webhook())
+    api.add_route('/bluebeam/submission', DispatchBluebeam().Submission())
     api.add_sink(default_error, '')
     return api
 
