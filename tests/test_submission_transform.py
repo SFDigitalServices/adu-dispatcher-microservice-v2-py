@@ -21,7 +21,7 @@ def test_submission_template(monkeypatch):
         submission_data = json.load(file_obj)
     assert submission_data
 
-    with open('tests/mocks/submission_transformed.json', 'r') as file_obj:
+    with open('tests/mocks/submission_accela_transformed.json', 'r') as file_obj:
         submission_transformed = json.load(file_obj)
     assert submission_transformed
 

@@ -6,14 +6,14 @@ from .transform import TransformBase
 
 class SubmissionTransform(TransformBase):
     """ Transform for Export Submissions """
-    def transform(self, data):
+    def accela_transform(self, submission):
         """
         transform submissions
         """
         # get record template
         with open('service/templates/accela_submission.json', 'r') as file_obj:
             template_record = json.load(file_obj)
-        output = self.populate_template(template_record, data)
+        output = self.populate_template(template_record, submission)
         return output
 
     @staticmethod
@@ -168,3 +168,43 @@ class SubmissionTransform(TransformBase):
         record['comments'].append({"text": comment_upload})
 
         return record
+
+    def bluebeam_transform(self, submission):
+        """
+        transform submissions for bluebeam
+        """
+        data = submission['data']
+        output = {
+            "project_name": data['projectAddress'],
+            "email": data['email'],
+            "phone": data['phoneNumber'],
+            "name": "{0} {1}".format(data['firstName'], data['lastName']),
+            "files": self.bluebeam_adu_files_transform(data)
+        }
+        return output
+
+    @staticmethod
+    def bluebeam_adu_files_transform(data):
+        """ transform adu file uploads """
+        files = []
+        field_map = {
+            "uploadPlans": "Plans",
+            "uploadPRJ": "Application (PRJ)",
+            "uploadADUScreening": "ADU Screening Form",
+            "uploadADUChecklist": "ADU Checklist",
+            "uploadFixtureCount": "PUC Fixture Count Form",
+            "uploadTreePlantingChecklist": "DPW Tree Checklist",
+            "uploadStreetTree": "DPW Tree Application"
+        }
+        for field in field_map:
+            if field in data:
+                for idx in data[field]:
+                    name = "{0} - {1}".format(field_map[field], data['projectAddress'])
+                    if len(data[field]) > 1:
+                        name = "{0} ({1} of {2})".format(name, idx+1, len(data[field]))
+                    url = data[field][0]['url']
+                    files.append({
+                        "url": url,
+                        "originalName": name
+                    })
+        return files

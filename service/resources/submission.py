@@ -1,4 +1,4 @@
-"""Welcome submission module"""
+"""Submission module"""
 #pylint: disable=too-few-public-methods
 import os
 import sys
@@ -47,7 +47,7 @@ class Submission():
                 airtable_id = insert["id"]
 
                 # transform submission into record
-                record_json = SubmissionTransform().transform(submission_json)
+                record_json = SubmissionTransform().accela_transform(submission_json)
 
                 # send record to accela
                 response = self.send_record_to_accela(record_json)
@@ -109,6 +109,9 @@ class Submission():
             'LAST_NAME': submission_json['data']['lastName'],
             'EMAIL': submission_json['data']['email'],
             'NUM_PROPOSED_ADU': len(submission_json['data']['proposedAdUs']),
+            'BLUEBEAM_UPLOADS': json.dumps(
+                SubmissionTransform().bluebeam_transform(submission_json)
+                ),
             'ACCELA_ENV': os.environ.get('ACCELA_ENV')
         })
 
