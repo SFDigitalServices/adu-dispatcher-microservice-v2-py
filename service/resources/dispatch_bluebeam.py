@@ -20,7 +20,33 @@ ERROR_GENERIC = "Bad Request"
 #@falcon.before(validate_access)
 class DispatchBluebeam():
     """ Bluebeam Dispatch class """
+
+    @staticmethod
+    @timer
+    def trigger_bluebeam_submission(airtable_record_id):
+        """ Trigger Bluebeam Submission """
+        url = os.environ.get('DISPATCH_BLUEBEAM_SUBMISSION_URL')
+        headers = {
+            'ACCESS_KEY': os.environ.get('DISPATCH_BLUEBEAM_SUBMISSION_API_KEY')
+        }
+        params = {}
+        data = json.dumps({
+            "airtable_record_id": airtable_record_id
+        })
+        response = requests.post(url, headers=headers, data=data, params=params)
+        response_json = None
+
+        with sentry_sdk.configure_scope() as scope:
+            scope.set_extra('trigger_bluebeam_submission_status_code', response.status_code)
+            scope.set_extra('trigger_bluebeam_submission_content', response.content)
+
+        if response.status_code == 200:
+            response_json = response.json()
+
+        return response_json
+
     class Submission():
+
         """ Submission endpoint """
         def on_post(self, req, resp):
             """on post request
@@ -36,19 +62,9 @@ class DispatchBluebeam():
                         raise ValueError(ERROR_GENERIC)
 
                     airtable_id = data_json['airtable_record_id']
-                    bluebeam_json = self.get_bluebeam_json_by_airtable_id(airtable_id)
+                    bluebeam_resp = self.dispatch_bluebeam_submission(airtable_id)
 
-                    with sentry_sdk.configure_scope() as scope:
-                        scope.set_extra('bluebeam_json', bluebeam_json)
-
-                    if bluebeam_json:
-                        bluebeam_resp = self.send_bluebeam_submission(bluebeam_json)
-                        with sentry_sdk.configure_scope() as scope:
-                            scope.set_extra('bluebeam_resp', bluebeam_resp)
-
-                        sentry_sdk.capture_message(
-                            'ADU Inake Bluebeam Submission '+airtable_id, 'info')
-
+                    if bluebeam_resp:
                         resp.body = json.dumps(jsend.success(bluebeam_resp))
                         resp.status = falcon.HTTP_200
                         return
@@ -62,6 +78,27 @@ class DispatchBluebeam():
             resp.status = falcon.HTTP_500
             resp.body = json.dumps(jsend.error(msg))
             sentry_sdk.capture_message('ADU Inake Bluebeam Submission Error', 'error')
+
+        @staticmethod
+        def dispatch_bluebeam_submission(airtable_id):
+            """ Dispatch Bluebeam submission """
+            bluebeam_json = \
+                DispatchBluebeam.Submission.get_bluebeam_json_by_airtable_id(airtable_id)
+
+            with sentry_sdk.configure_scope() as scope:
+                scope.set_extra('bluebeam_json', bluebeam_json)
+
+            if bluebeam_json:
+                bluebeam_resp = DispatchBluebeam.Submission.send_bluebeam_submission(bluebeam_json)
+                with sentry_sdk.configure_scope() as scope:
+                    scope.set_extra('bluebeam_resp', bluebeam_resp)
+
+                sentry_sdk.capture_message(
+                    'ADU Inake Bluebeam Submission '+airtable_id, 'info')
+
+                return bluebeam_resp
+
+            return None
 
         @staticmethod
         @timer
@@ -122,7 +159,7 @@ class DispatchBluebeam():
             msg = ERROR_GENERIC
 
             if req.content_length:
-                airtable_record_id = req.params['airtable_record_id']
+
                 data = req.stream.read(sys.maxsize)
                 data_json = json.loads(data)
 
@@ -137,6 +174,7 @@ class DispatchBluebeam():
 
                     # init airtable
                     airtable = get_airtable()
+                    airtable_record_id = req.params['airtable_record_id']
                     bluebeam_json = data_json['data']
 
                     updated = self.update_submission_airtable_bluebeam(
@@ -158,7 +196,7 @@ class DispatchBluebeam():
                     resp.status = falcon.HTTP_200
 
                     sentry_sdk.capture_message(
-                        'ADU Inake Bluebeam uploaded '+bluebeam_json['bluebeam_project_id'], 'info')
+                        "ADU Intake Bluebeam uploaded {0} for {1}".format(bluebeam_json['bluebeam_project_id'], airtable_record_id), 'info')
 
                     return
 

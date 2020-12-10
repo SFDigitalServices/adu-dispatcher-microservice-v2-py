@@ -8,6 +8,7 @@ import falcon
 import jsend
 import sentry_sdk
 from .dispatch_email import Email
+from .dispatch_bluebeam import DispatchBluebeam
 from .hooks import validate_access
 from ..modules.util import timer
 from ..modules.accela import Accela
@@ -38,6 +39,12 @@ class Submission():
                 accela_prj_id = "" # placeholder accela_prj variable
                 accela_sys_id = "" # placeholder accela_sys_id variable
 
+                enable_bluebeam = \
+                    'enable_bluebeam' in data_json and bool(data_json['enable_bluebeam'])
+
+                with sentry_sdk.configure_scope() as scope:
+                    scope.set_extra('enable_bluebeam', enable_bluebeam)
+
                 submission_json = self.get_submssion_json(submission_id)
 
                 # init airtable
@@ -57,20 +64,13 @@ class Submission():
                     scope.set_extra('accela_resp_json', response.json())
 
                 if response.status_code == 200:
-                    content_json = response.json()
+                    accela_json = response.json()
 
-                    self.update_submission_airtable(airtable, airtable_id, content_json)
+                    accela_prj_id = accela_json['result']['customId']
+                    accela_sys_id = accela_json['result']['id']
 
-                    emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+                    self.update_submission_airtable(airtable, airtable_id, accela_json)
 
-                    response_emails = Accela.send_email_to_accela(
-                        content_json['result']['id'], emails_sent['EMAILS'])
-
-                    content_json['emails'] = response_emails.json()
-                    msg = content_json
-
-                    resp.body = json.dumps(jsend.success(msg))
-                    resp.status = falcon.HTTP_200
                     #pylint: disable=line-too-long
                     sentry_sdk.capture_message(
                         'ADU Intake {submission_id} {accela_env} {accela_prj_id} {accela_sys_id}'.format(
@@ -79,6 +79,38 @@ class Submission():
                             accela_sys_id=accela_sys_id,
                             accela_env=os.environ.get('ACCELA_ENV')
                         ), 'info')
+
+                    if enable_bluebeam:
+                        accela_json['bluebeam'] = None
+                        bluebeam_resp = DispatchBluebeam.trigger_bluebeam_submission(airtable_id)
+
+                        if bluebeam_resp:
+                            accela_json['bluebeam'] = bluebeam_resp.json()
+                    else:
+                        emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+
+                        response_emails = Accela.send_email_to_accela(
+                            accela_json['result']['id'], emails_sent['EMAILS'])
+
+                        accela_json['emails'] = response_emails.json()
+
+                    msg = accela_json
+
+                    resp.body = json.dumps(jsend.success(msg))
+                    resp.status = falcon.HTTP_200
+
+                    with sentry_sdk.configure_scope() as scope:
+                        scope.set_extra('msg_json', msg)
+
+                    #pylint: disable=line-too-long
+                    sentry_sdk.capture_message(
+                        'ADU Intake Success {submission_id} {accela_env} {accela_prj_id} {accela_sys_id}'.format(
+                            submission_id=submission_id,
+                            accela_prj_id=accela_prj_id,
+                            accela_sys_id=accela_sys_id,
+                            accela_env=os.environ.get('ACCELA_ENV')
+                        ), 'info')
+
                     return
 
                 with sentry_sdk.configure_scope() as scope:

@@ -198,11 +198,13 @@ class SubmissionTransform(TransformBase):
         }
         for field in field_map:
             if field in data:
-                for idx in data[field]:
+                idx = 0
+                for val in data[field]:
+                    idx += 1
                     name = "{0} - {1}".format(field_map[field], data['projectAddress'])
                     if len(data[field]) > 1:
-                        name = "{0} ({1} of {2})".format(name, idx+1, len(data[field]))
-                    url = data[field][0]['url']
+                        name = "{0} ({1} of {2})".format(name, idx, len(data[field]))
+                    url = val['url']
                     files.append({
                         "url": url,
                         "originalName": name
