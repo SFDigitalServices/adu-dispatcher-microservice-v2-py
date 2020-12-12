@@ -175,7 +175,7 @@ class SubmissionTransform(TransformBase):
         """
         data = submission['data']
         output = {
-            "project_name": data['projectAddress'],
+            "project_name": "{} ADU Permit".format(data['projectAddress']),
             "email": data['email'],
             "phone": data['phoneNumber'],
             "name": "{0} {1}".format(data['firstName'], data['lastName']),
