@@ -71,7 +71,7 @@ class Email():
             'submission_date_iso': row['fields']['SUBMISSION_DATE'],
             'accela_sys_id': row['fields']['ACCELA_SYS_ID'],
             'num_proposed_adu': row['fields']['NUM_PROPOSED_ADU'],
-            'bb_prj_id': row['fields']['BLUEBEAM_PRJ_ID']
+            'bb_prj_id': row['fields'].get('BLUEBEAM_PRJ_ID', '')
         })
 
         emails = [
