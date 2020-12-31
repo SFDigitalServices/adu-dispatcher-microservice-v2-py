@@ -7,6 +7,8 @@ Your planning application number is -prj_number-.
 Use it to track your application in the Planning Applications tab in our Property Information Map (PIM) at https://sfplanninggis.org/pim/. It will take 1 day for your record to appear in PIM.
  
 A planner will email you about next steps, including how to pay the intake fee, within 14 days.
+
+If you'd like to submit revised plans into Bluebeam, be sure to insert a Back Check Menu page (https://sfdbi.org/ccsf-bluebeam-back-check-menu) by following these detailed Back Check instructions at https://sfdbi.org/BackCheckInstructions or learn more about the plan review process in Bluebeam at https://sf.gov/information/plan-review-process-bluebeam.
  
 Find more information about ADUs at SF Planning https://sfplanning.org/accessory-dwelling-units.
  
