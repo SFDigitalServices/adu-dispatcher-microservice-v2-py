@@ -13,22 +13,26 @@ from .dispatch_email import Email
 from .hooks import validate_access
 from ..modules.util import timer
 from ..modules.accela import Accela
-from ..modules.common import get_airtable
+from ..modules.common import get_airtable, has_option_req
 
 ERROR_GENERIC = "Bad Request"
 
-#@falcon.before(validate_access)
+@falcon.before(validate_access)
 class DispatchBluebeam():
     """ Bluebeam Dispatch class """
 
     @staticmethod
     @timer
-    def trigger_bluebeam_submission(airtable_record_id):
-        """ Trigger Bluebeam Submission """
+    def trigger_bluebeam_submission(airtable_record_id, send_email):
+        """ Trigger Bluebeam Submission request """
         url = os.environ.get('DISPATCH_BLUEBEAM_SUBMISSION_URL')
         headers = {
-            'ACCESS_KEY': os.environ.get('DISPATCH_BLUEBEAM_SUBMISSION_API_KEY')
+            'ACCESS_KEY': os.environ.get('DISPATCH_BLUEBEAM_SUBMISSION_API_KEY'),
+            'X-Options': ''
         }
+        if send_email:
+            headers['X-Options'] = 'EMAIL'
+
         params = {}
         data = json.dumps({
             "airtable_record_id": airtable_record_id
@@ -62,7 +66,8 @@ class DispatchBluebeam():
                         raise ValueError(ERROR_GENERIC)
 
                     airtable_id = data_json['airtable_record_id']
-                    bluebeam_resp = self.dispatch_bluebeam_submission(airtable_id)
+                    send_email = has_option_req(req, 'EMAIL')
+                    bluebeam_resp = self.dispatch_bluebeam_submission(airtable_id, send_email)
 
                     if bluebeam_resp:
                         resp.body = json.dumps(jsend.success(bluebeam_resp))
@@ -80,10 +85,13 @@ class DispatchBluebeam():
             sentry_sdk.capture_message('ADU Inake Bluebeam Submission Error', 'error')
 
         @staticmethod
-        def dispatch_bluebeam_submission(airtable_id):
+        def dispatch_bluebeam_submission(airtable_id, send_email):
             """ Dispatch Bluebeam submission """
+            #pylint: disable=line-too-long
             bluebeam_json = \
-                DispatchBluebeam.Submission.get_bluebeam_json_by_airtable_id(airtable_id)
+                DispatchBluebeam.Submission.get_bluebeam_json_by_airtable_id(airtable_id, send_email)
+
+            bluebeam_resp = None
 
             with sentry_sdk.configure_scope() as scope:
                 scope.set_extra('bluebeam_json', bluebeam_json)
@@ -96,13 +104,11 @@ class DispatchBluebeam():
                 sentry_sdk.capture_message(
                     'ADU Inake Bluebeam Submission '+airtable_id, 'info')
 
-                return bluebeam_resp
-
-            return None
+            return bluebeam_resp
 
         @staticmethod
         @timer
-        def get_bluebeam_json_by_airtable_id(airtable_id):
+        def get_bluebeam_json_by_airtable_id(airtable_id, send_email):
             """ Get JSON for Bluebeam microservice """
             json_output = None
             # init airtable
@@ -115,7 +121,7 @@ class DispatchBluebeam():
                 webhook = {
                     "type": "ADU",
                     "params": {
-                        "send_email": 1,
+                        "send_email": send_email,
                         "airtable_record_id":airtable_id
                     },
                     "users": []

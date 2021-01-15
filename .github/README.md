@@ -11,6 +11,18 @@ This transaction will also log meta data in an Airtable for tracking.
 curl --location --request POST '<ADU_DISPATCHER_HOST>/submission' \
 --header 'ACCESS_KEY: XXXXXXXX' \
 --header 'Content-Type: application/json' \
+--header 'X-Options: EMAIL' \
+--data-raw '{
+    "id": "<FORM_SUBMISSION_ID>"
+}'
+```
+
+This will send submission to [Bluebeam microservice](https://github.com/SFDigitalServices/bluebeam-microservice)
+```
+curl --location --request POST '<ADU_DISPATCHER_HOST>/submission' \
+--header 'ACCESS_KEY: XXXXXXXX' \
+--header 'Content-Type: application/json' \
+--header 'X-Options: BLUEBEAM, EMAIL' \
 --data-raw '{
     "id": "<FORM_SUBMISSION_ID>"
 }'

@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import datetime
+import threading
 import falcon
 import jsend
 import sentry_sdk
@@ -13,7 +14,7 @@ from .hooks import validate_access
 from ..modules.util import timer
 from ..modules.accela import Accela
 from ..modules.formio import Formio
-from ..modules.common import get_airtable
+from ..modules.common import get_airtable, has_option_req
 from ..transforms.submission_transform import SubmissionTransform
 
 
@@ -22,7 +23,7 @@ from ..transforms.submission_transform import SubmissionTransform
 class Submission():
     """Submission class"""
     def on_post(self, req, resp):
-        #pylint: disable=no-self-use,too-many-locals
+        #pylint: disable=no-self-use,too-many-locals,too-many-statements
         """
             on post request
         """
@@ -39,11 +40,12 @@ class Submission():
                 accela_prj_id = "" # placeholder accela_prj variable
                 accela_sys_id = "" # placeholder accela_sys_id variable
 
-                enable_bluebeam = \
-                    'enable_bluebeam' in data_json and bool(data_json['enable_bluebeam'])
+                enable_bluebeam = has_option_req(req, 'BLUEBEAM')
+                send_email = has_option_req(req, 'EMAIL')
 
                 with sentry_sdk.configure_scope() as scope:
                     scope.set_extra('enable_bluebeam', enable_bluebeam)
+                    scope.set_extra('send_email', send_email)
 
                 submission_json = self.get_submssion_json(submission_id)
 
@@ -81,18 +83,20 @@ class Submission():
                         ), 'info')
 
                     if enable_bluebeam:
-                        accela_json['bluebeam'] = None
-                        bluebeam_resp = DispatchBluebeam.trigger_bluebeam_submission(airtable_id)
+                        accela_json['airtable'] = {"id": airtable_id}
 
-                        if bluebeam_resp:
-                            accela_json['bluebeam'] = bluebeam_resp.json()
+                        # threading bluebeam submission
+                        thread = threading.Thread(target=DispatchBluebeam.trigger_bluebeam_submission, args=(airtable_id, send_email))
+                        thread.start()
+
                     else:
-                        emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+                        if send_email:
+                            emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
 
-                        response_emails = Accela.send_email_to_accela(
-                            accela_json['result']['id'], emails_sent['EMAILS'])
+                            response_emails = Accela.send_email_to_accela(
+                                accela_json['result']['id'], emails_sent['EMAILS'])
 
-                        accela_json['emails'] = response_emails.json()
+                            accela_json['emails'] = response_emails.json()
 
                     msg = accela_json
 
