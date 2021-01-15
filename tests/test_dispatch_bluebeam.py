@@ -4,6 +4,7 @@ import json
 from unittest.mock import patch
 import pytest
 from falcon import testing
+
 import service.microservice
 from service.resources.dispatch_bluebeam import DispatchBluebeam
 
