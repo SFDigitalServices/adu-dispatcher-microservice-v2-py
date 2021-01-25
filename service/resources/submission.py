@@ -1,18 +1,20 @@
-"""Welcome submission module"""
+"""Submission module"""
 #pylint: disable=too-few-public-methods
 import os
 import sys
 import json
 import datetime
+import threading
 import falcon
 import jsend
 import sentry_sdk
-import requests
 from .dispatch_email import Email
+from .dispatch_bluebeam import DispatchBluebeam
 from .hooks import validate_access
 from ..modules.util import timer
+from ..modules.accela import Accela
 from ..modules.formio import Formio
-from ..modules.common import get_airtable
+from ..modules.common import get_airtable, has_option_req
 from ..transforms.submission_transform import SubmissionTransform
 
 
@@ -21,7 +23,7 @@ from ..transforms.submission_transform import SubmissionTransform
 class Submission():
     """Submission class"""
     def on_post(self, req, resp):
-        #pylint: disable=no-self-use,too-many-locals
+        #pylint: disable=no-self-use,too-many-locals,too-many-statements
         """
             on post request
         """
@@ -38,6 +40,13 @@ class Submission():
                 accela_prj_id = "" # placeholder accela_prj variable
                 accela_sys_id = "" # placeholder accela_sys_id variable
 
+                enable_bluebeam = has_option_req(req, 'BLUEBEAM')
+                send_email = has_option_req(req, 'EMAIL')
+
+                with sentry_sdk.configure_scope() as scope:
+                    scope.set_extra('enable_bluebeam', enable_bluebeam)
+                    scope.set_extra('send_email', send_email)
+
                 submission_json = self.get_submssion_json(submission_id)
 
                 # init airtable
@@ -47,34 +56,23 @@ class Submission():
                 airtable_id = insert["id"]
 
                 # transform submission into record
-                record_json = SubmissionTransform().transform(submission_json)
+                record_json = SubmissionTransform().accela_transform(submission_json)
 
                 # send record to accela
-                response = self.send_record_to_accela(record_json)
+                response = Accela.send_record_to_accela(record_json)
 
                 with sentry_sdk.configure_scope() as scope:
                     scope.set_extra('accela_resp_status_code', response.status_code)
                     scope.set_extra('accela_resp_json', response.json())
 
                 if response.status_code == 200:
-                    content_json = response.json()
+                    accela_json = response.json()
 
-                    self.update_submission_airtable(airtable, airtable_id, content_json)
+                    accela_prj_id = accela_json['result']['customId']
+                    accela_sys_id = accela_json['result']['id']
 
-                    emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+                    self.update_submission_airtable(airtable, airtable_id, accela_json)
 
-                    response_emails = self.send_email_to_accela(
-                        content_json['result']['id'], emails_sent['EMAILS'])
-
-                    with sentry_sdk.configure_scope() as scope:
-                        scope.set_extra('accela_re_emails_status_code', response_emails.status_code)
-                        scope.set_extra('accela_re_emails_json', response_emails.json())
-
-                    content_json['emails'] = response_emails.json()
-                    msg = content_json
-
-                    resp.body = json.dumps(jsend.success(msg))
-                    resp.status = falcon.HTTP_200
                     #pylint: disable=line-too-long
                     sentry_sdk.capture_message(
                         'ADU Intake {submission_id} {accela_env} {accela_prj_id} {accela_sys_id}'.format(
@@ -83,6 +81,40 @@ class Submission():
                             accela_sys_id=accela_sys_id,
                             accela_env=os.environ.get('ACCELA_ENV')
                         ), 'info')
+
+                    if enable_bluebeam:
+                        accela_json['airtable'] = {"id": airtable_id}
+
+                        # threading bluebeam submission
+                        thread = threading.Thread(target=DispatchBluebeam.trigger_bluebeam_submission, args=(airtable_id, send_email))
+                        thread.start()
+
+                    else:
+                        if send_email:
+                            emails_sent = Email.send_submission_email_by_airtable_id(airtable_id)
+
+                            response_emails = Accela.send_email_to_accela(
+                                accela_json['result']['id'], emails_sent['EMAILS'])
+
+                            accela_json['emails'] = response_emails.json()
+
+                    msg = accela_json
+
+                    resp.body = json.dumps(jsend.success(msg))
+                    resp.status = falcon.HTTP_200
+
+                    with sentry_sdk.configure_scope() as scope:
+                        scope.set_extra('msg_json', msg)
+
+                    #pylint: disable=line-too-long
+                    sentry_sdk.capture_message(
+                        'ADU Intake Success {submission_id} {accela_env} {accela_prj_id} {accela_sys_id}'.format(
+                            submission_id=submission_id,
+                            accela_prj_id=accela_prj_id,
+                            accela_sys_id=accela_sys_id,
+                            accela_env=os.environ.get('ACCELA_ENV')
+                        ), 'info')
+
                     return
 
                 with sentry_sdk.configure_scope() as scope:
@@ -109,6 +141,9 @@ class Submission():
             'LAST_NAME': submission_json['data']['lastName'],
             'EMAIL': submission_json['data']['email'],
             'NUM_PROPOSED_ADU': len(submission_json['data']['proposedAdUs']),
+            'BLUEBEAM_UPLOADS': json.dumps(
+                SubmissionTransform().bluebeam_transform(submission_json)
+                ),
             'ACCELA_ENV': os.environ.get('ACCELA_ENV')
         })
 
@@ -131,34 +166,3 @@ class Submission():
         submission_json = Formio.get_formio_submission_by_id(
             submission_id, form_id=os.environ.get('FORMIO_FORM_ID_ADU'))
         return submission_json
-
-    @staticmethod
-    @timer
-    def send_record_to_accela(record_json):
-        """ Send record to Accela """
-        url = os.environ.get('ACCELA_MS_BASE_URL') + '/records'
-        headers = {
-            'X-SFDS-APIKEY': os.environ.get('ACCELA_MS_APIKEY'),
-            'X-ACCELA-ENV': os.environ.get('ACCELA_ENV'),
-            'X-ACCELA-USERNAME': os.environ.get('ACCELA_USERNAME')
-        }
-        params = {}
-        data = json.dumps(record_json)
-        response = requests.post(url, headers=headers, data=data, params=params)
-
-        return response
-
-    @staticmethod
-    @timer
-    def send_email_to_accela(record_id, emails):
-        """ Send record to Accela """
-        url = os.environ.get('ACCELA_MS_BASE_URL') + '/records/' + record_id + '/comments'
-        headers = {
-            'X-SFDS-APIKEY': os.environ.get('ACCELA_MS_APIKEY'),
-            'X-ACCELA-ENV': os.environ.get('ACCELA_ENV'),
-            'X-ACCELA-USERNAME': os.environ.get('ACCELA_USERNAME')
-        }
-        params = {}
-        data = json.dumps(emails)
-        response = requests.put(url, headers=headers, data=data, params=params)
-        return response

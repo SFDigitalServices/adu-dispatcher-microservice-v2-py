@@ -36,39 +36,47 @@
         "contactPermitFees": "other",
         "uploadPRJ": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],
         "uploadADUChecklist": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],
         "uploadADUScreening": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],
         "uploadFixtureCount": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],
         "uploadStreetTree": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],
         "uploadTreePlantingChecklist": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],
         "uploadPlans": [
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             },
             {
+                "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             }
         ],

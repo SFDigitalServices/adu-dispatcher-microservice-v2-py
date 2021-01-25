@@ -58,3 +58,9 @@ def get_accela_link_by_id(accela_sys_id):
         cap3=accela_sys_caps[3],
     )
     return accela_link
+
+def has_option_req(req, option):
+    """ Check if specific option in in X-Options request header """
+    options = req.get_header('X-Options', False, "").split(",")
+    match = filter(lambda x: option == x.strip(), options)
+    return len(list(match)) > 0

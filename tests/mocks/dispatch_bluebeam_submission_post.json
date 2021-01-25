@@ -1,0 +1,55 @@
+{
+    "project_name": "123 MAIN ST",
+    "email": "test@test.com",
+    "phone": "(415) 111-1111",
+    "name": "Test First Name Test Last Name",
+    "files": [
+        {
+        "url": "",
+        "originalName": "Plans - 123 MAIN ST (1 of 2)"
+        },
+        {
+        "url": "",
+        "originalName": "Plans - 123 MAIN ST (2 of 2)"
+        },
+        {
+        "url": "",
+        "originalName": "Application (PRJ) - 123 MAIN ST"
+        },
+        {
+        "url": "",
+        "originalName": "ADU Screening Form - 123 MAIN ST"
+        },
+        {
+        "url": "",
+        "originalName": "ADU Checklist - 123 MAIN ST"
+        },
+        {
+        "url": "",
+        "originalName": "PUC Fixture Count Form - 123 MAIN ST"
+        },
+        {
+        "url": "",
+        "originalName": "DPW Tree Checklist - 123 MAIN ST"
+        },
+        {
+        "url": "",
+        "originalName": "DPW Tree Application - 123 MAIN ST"
+        }
+    ],
+    "_webhook": {
+        "type": "ADU",
+        "params": {
+            "send_email": "",
+            "airtable_record_id":""
+        },
+        "users": [
+            {
+                "email": ""
+            },
+            {
+                "email": ""
+            }
+        ]
+    }
+}
