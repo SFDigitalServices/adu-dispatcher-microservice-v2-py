@@ -205,8 +205,9 @@ class SubmissionTransform(TransformBase):
                     if len(data[field]) > 1:
                         name = "{0} ({1} of {2})".format(name, idx, len(data[field]))
                     url = val['url']
+                    _filename, file_extension = os.path.splitext(url)
                     files.append({
                         "url": url,
-                        "originalName": name
+                        "originalName": "{0}{1}".format(name, file_extension)
                     })
         return files
