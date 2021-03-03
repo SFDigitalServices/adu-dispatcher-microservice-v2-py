@@ -172,6 +172,7 @@ class DispatchBluebeam():
 
                 with sentry_sdk.configure_scope() as scope:
                     scope.set_extra('bb_webhook_json', data_json)
+                    scope.set_extra('req_params', req.params)
 
                 try:
                     if 'airtable_record_id' not in req.params or \
@@ -191,7 +192,9 @@ class DispatchBluebeam():
                         scope.set_extra('bb_updated_json', updated)
 
                     # Send Email
-                    send_email = bool(req.params['send_email']) if 'send_email' in req.params else False
+                    send_email = json.loads(req.params['send_email'].lower()) if 'send_email' in req.params else False
+                    with sentry_sdk.configure_scope() as scope:
+                        scope.set_extra('send_email', send_email)
                     if send_email:
                         accela_sys_id = updated['ACCELA_SYS_ID']
                         emails_sent = Email.send_submission_email_by_airtable_id(airtable_record_id)
