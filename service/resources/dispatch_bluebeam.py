@@ -49,6 +49,7 @@ class DispatchBluebeam():
 
         return response_json
 
+    @falcon.before(validate_access)
     class Submission():
 
         """ Submission endpoint """
@@ -155,7 +156,7 @@ class DispatchBluebeam():
 
             return response_json
 
-
+    @falcon.before(validate_access)
     class Webhook():
         """ Webhook endpoint """
         #pylint: disable=no-self-use, line-too-long
