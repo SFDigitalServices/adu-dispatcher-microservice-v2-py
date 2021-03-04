@@ -8,12 +8,22 @@ from falcon import testing
 import service.microservice
 from service.resources.dispatch_bluebeam import DispatchBluebeam
 
+CLIENT_HEADERS = {
+    "ACCESS_KEY": "1234567"
+}
+
 @pytest.fixture()
 def client():
     """ client fixture """
-    return testing.TestClient(app=service.microservice.start_service())
+    return testing.TestClient(app=service.microservice.start_service(), headers=CLIENT_HEADERS)
 
-def test_dispatch_bluebeam_error(client):
+@pytest.fixture
+def mock_env_access_key(monkeypatch):
+    """ mock environment access key """
+    monkeypatch.setenv("ACCESS_KEY", CLIENT_HEADERS["ACCESS_KEY"])
+
+def test_dispatch_bluebeam_error(client, mock_env_access_key):
+    # pylint: disable=unused-argument
     """ Test dispatch email in error state """
     response = client.simulate_post(
         '/bluebeam/webhook',
