@@ -41,6 +41,20 @@ curl --location --request POST '<ADU_DISPATCHER_HOST>/email' \
 }'
 ```
 
+### Resend submission uploads to Bluebeam
+This endpoint takes in an airtable record ID and resends submission uploads to Bluebeam microservice.  
+
+This transaction will also be logged into Airtable column `BLUEBEAM_PRJ_ID` when successful. 
+```
+curl --location --request POST '<ADU_DISPATCHER_HOST>/bluebeam/submission' \
+--header 'ACCESS_KEY: XXXXXXXX' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "airtable_record_id": "<AIRTABLE_RECORD_ID>"
+}'
+```
+
+
 ## Built with SFDS microservice.py framework
 [SFDS microservice.py](https://github.com/SFDigitalServices/microservice-py) framework jumpstarts your next python-based microservice. It consists of a skeleton boilerplate make up of
 * [falcon](https://falconframework.org/): bare-metal Python web API framework 
