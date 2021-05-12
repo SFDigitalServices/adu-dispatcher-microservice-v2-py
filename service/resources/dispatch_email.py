@@ -109,7 +109,12 @@ class Email():
         subject = "New Application for ADU at {project_address}".format(
             project_address=data['project_address'])
 
-        email(os.environ.get('EMAIL_STAFF'), subject, substitutions, html_template, text_template)
+        staff_email = os.environ.get('EMAIL_STAFF', False)
+
+        if staff_email:
+            email(
+                staff_email,
+                subject, substitutions, html_template, text_template)
 
         return Email.get_email_text('email_staff', substitutions)
 
