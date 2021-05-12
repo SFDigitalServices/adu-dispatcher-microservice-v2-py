@@ -141,6 +141,7 @@ class Submission():
             'LAST_NAME': submission_json['data']['lastName'],
             'EMAIL': submission_json['data']['email'],
             'NUM_PROPOSED_ADU': len(submission_json['data']['proposedAdUs']),
+            'SITE_PERMIT': submission_json['data']['sitePermit'],
             'BLUEBEAM_UPLOADS': json.dumps(
                 SubmissionTransform().bluebeam_transform(submission_json)
                 ),

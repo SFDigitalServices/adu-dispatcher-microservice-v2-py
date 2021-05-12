@@ -13,6 +13,8 @@ def test_transform_base():
 
 def test_submission_template(monkeypatch):
     """ test submission populate_template """
+    monkeypatch.setenv("UPLOAD_HOST", "https://localhost")
+
     with open('service/templates/accela_submission.json', 'r') as file_obj:
         template_record = json.load(file_obj)
     assert template_record
@@ -25,7 +27,19 @@ def test_submission_template(monkeypatch):
         submission_transformed = json.load(file_obj)
     assert submission_transformed
 
-    monkeypatch.setenv("UPLOAD_HOST", "https://localhost")
+    output = SubmissionTransform().populate_template(template_record, submission_data)
+    assert submission_transformed == output
+
+    # test submission variant for New Construction
+    submission_data['data']['whereProposedAduLocated'] = "newConstruction"
+    for idx, form in enumerate(submission_transformed['customForms']):
+        if form['id'] == "PLN_PRJ-PROJECT.cDESCRIPTION":
+            submission_transformed['customForms'][idx]['Additions'] = ""
+            submission_transformed['customForms'][idx]['New Construction'] = "CHECKED"
+
+    with open('service/templates/accela_submission.json', 'r') as file_obj:
+        template_record = json.load(file_obj)
+    assert template_record
 
     output = SubmissionTransform().populate_template(template_record, submission_data)
     assert submission_transformed == output

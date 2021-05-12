@@ -71,6 +71,7 @@ class Email():
             'submission_date_iso': row['fields']['SUBMISSION_DATE'],
             'accela_sys_id': row['fields']['ACCELA_SYS_ID'],
             'num_proposed_adu': row['fields']['NUM_PROPOSED_ADU'],
+            'site_permit': row['fields']['SITE_PERMIT'],
             'bb_prj_id': row['fields'].get('BLUEBEAM_PRJ_ID', '')
         })
 
@@ -125,6 +126,7 @@ class Email():
             '-submission_date-': submission_date,
             '-accela_link-': get_accela_link_by_id(data['accela_sys_id']),
             '-num_proposed_adu-': str(data['num_proposed_adu']),
+            '-site_permit-': data['site_permit'],
             '-bluebeam_prj_id-': data['bb_prj_id']
         }
         return substitutions

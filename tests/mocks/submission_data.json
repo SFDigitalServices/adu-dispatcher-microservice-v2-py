@@ -15,6 +15,7 @@
         "projectAddressLot": "567",
         "projectAddressZip": "94000",
         "isWithinExistingBuilding": "no",
+        "sitePermit": "yes",
         "proposedAdUs": [
             {
                 "proposedUnitType": "Studio",
@@ -75,6 +76,18 @@
                 "url": "https://localhost/test.pdf",
                 "key": "test.pdf"
             },
+            {
+                "url": "https://localhost/test.pdf",
+                "key": "test.pdf"
+            }
+        ],
+        "uploadAgentAuthorization": [
+            {
+                "url": "https://localhost/test.pdf",
+                "key": "test.pdf"
+            }
+        ],
+        "uploadSchoolFacilityFee": [
             {
                 "url": "https://localhost/test.pdf",
                 "key": "test.pdf"

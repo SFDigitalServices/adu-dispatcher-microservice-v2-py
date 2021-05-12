@@ -3,7 +3,7 @@
         "id": "Planning-Project-Project-PRJ"
     },
     "name": "123 MAIN ST",
-    "description": "",
+    "description": "Site permit: yes",
     "addresses": [
         {
             "streetName": "MAIN",
@@ -24,7 +24,7 @@
     ],
     "comments": [
         {
-            "text": "PRJ application: https://localhost/test.pdf \n\nADU checklist: https://localhost/test.pdf \n\nADU screening form: https://localhost/test.pdf \n\nFixture Count form: https://localhost/test.pdf \n\nStreet tree application and guidelines: https://localhost/test.pdf \n\nTree planting and protection checklist: https://localhost/test.pdf \n\nPlans : \n* https://localhost/test.pdf \n\n* https://localhost/test.pdf \n\n"
+            "text": "PRJ application: https://localhost/test.pdf \n\nADU checklist: https://localhost/test.pdf \n\nADU screening form: https://localhost/test.pdf \n\nFixture Count form: https://localhost/test.pdf \n\nAgent authorization form: https://localhost/test.pdf \n\nSchool Facility Fee form: https://localhost/test.pdf \n\nStreet tree application and guidelines: https://localhost/test.pdf \n\nTree planting and protection checklist: https://localhost/test.pdf \n\nPlans : \n* https://localhost/test.pdf \n\n* https://localhost/test.pdf \n\n"
         }
     ],
     "customForms": [
