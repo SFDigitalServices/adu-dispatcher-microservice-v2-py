@@ -71,6 +71,7 @@ class Email():
             'submission_date_iso': row['fields']['SUBMISSION_DATE'],
             'accela_sys_id': row['fields']['ACCELA_SYS_ID'],
             'num_proposed_adu': row['fields']['NUM_PROPOSED_ADU'],
+            'site_permit': row['fields']['SITE_PERMIT'],
             'bb_prj_id': row['fields'].get('BLUEBEAM_PRJ_ID', '')
         })
 
@@ -108,7 +109,12 @@ class Email():
         subject = "New Application for ADU at {project_address}".format(
             project_address=data['project_address'])
 
-        email(os.environ.get('EMAIL_STAFF'), subject, substitutions, html_template, text_template)
+        staff_email = os.environ.get('EMAIL_STAFF', False)
+
+        if staff_email:
+            email(
+                staff_email,
+                subject, substitutions, html_template, text_template)
 
         return Email.get_email_text('email_staff', substitutions)
 
@@ -125,6 +131,7 @@ class Email():
             '-submission_date-': submission_date,
             '-accela_link-': get_accela_link_by_id(data['accela_sys_id']),
             '-num_proposed_adu-': str(data['num_proposed_adu']),
+            '-site_permit-': data['site_permit'],
             '-bluebeam_prj_id-': data['bb_prj_id']
         }
         return substitutions

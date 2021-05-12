@@ -3,4 +3,5 @@ Project address: -proj_address-
 Submission date: -submission_date-
 Accela Link: -accela_link-
 Number of ADUs proposed: -num_proposed_adu-
+Site Permit: -site_permit-
 Bluebeam Project Id: -bluebeam_prj_id-

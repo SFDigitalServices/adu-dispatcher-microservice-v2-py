@@ -23,6 +23,7 @@ class SubmissionTransform(TransformBase):
         record = template
         data = submission['data']
         record['name'] = data['projectAddress']
+        record['description'] = "Site permit: {0}".format(data['sitePermit'])
         parcel = data['projectAddressBlock'] + data['projectAddressLot']
         record['parcels'][0]['parcelNumber'] = parcel
 
@@ -151,6 +152,8 @@ class SubmissionTransform(TransformBase):
             "uploadADUChecklist" : "ADU checklist",
             "uploadADUScreening" : "ADU screening form",
             "uploadFixtureCount" : "Fixture Count form",
+            "uploadAgentAuthorization" : "Agent authorization form",
+            "uploadSchoolFacilityFee" : "School Facility Fee form",
             "uploadStreetTree" : "Street tree application and guidelines",
             "uploadTreePlantingChecklist" : "Tree planting and protection checklist"
         }
@@ -193,6 +196,8 @@ class SubmissionTransform(TransformBase):
             "uploadADUScreening": "ADU Screening Form",
             "uploadADUChecklist": "ADU Checklist",
             "uploadFixtureCount": "PUC Fixture Count Form",
+            "uploadAgentAuthorization" : "Agent Authorization Form",
+            "uploadSchoolFacilityFee" : "School Facility Fee Form",
             "uploadTreePlantingChecklist": "DPW Tree Checklist",
             "uploadStreetTree": "DPW Tree Application"
         }

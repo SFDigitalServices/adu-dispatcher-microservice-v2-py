@@ -10,6 +10,7 @@
         "LAST_NAME": "Last",
         "EMAIL": "noreply@sf.gov",
         "NUM_PROPOSED_ADU": 1,
-        "AIRTABLE_ID": "recABC"
+        "AIRTABLE_ID": "recABC",
+        "SITE_PERMIT": "yes"
     }
 }
