@@ -1,17 +1,13 @@
 Dear -applicant_name-,
  
-Thank you for submitting your ADU application for -proj_address-. See your submitted application in Accela at -accela_link-
- 
-Your planning application number is -prj_number-.
- 
-Use it to track your application in the Planning Applications tab in our Property Information Map (PIM) at https://sfplanninggis.org/pim/. It will take 1 day for your record to appear in PIM.
- 
-A planner will email you about next steps, including how to pay the intake fee, within 14 days.
+Thank you for submitting your ADU application for -proj_address-.
 
-If you'd like to submit revised plans into Bluebeam, be sure to insert a Back Check Menu page (https://sfdbi.org/ccsf-bluebeam-back-check-menu) by following these detailed Back Check instructions at https://sfdbi.org/BackCheckInstructions or learn more about the plan review process in Bluebeam at https://sf.gov/information/plan-review-process-bluebeam.
+We will review your application and contact you within 5 business days with the next steps.
+
+If you do not receive a call back, please email us at dbicustomerservice@sfgov.org.
  
-Find more information about ADUs at SF Planning https://sfplanning.org/accessory-dwelling-units.
+Find more information about ADUs https://sf.gov/topics/accessory-dwelling-unit-adu.
  
 
 Thank you,
-SF Planning
+Department of Building Inspection
