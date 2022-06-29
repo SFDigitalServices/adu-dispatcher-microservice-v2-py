@@ -21,7 +21,6 @@ class SubmissionTransform(TransformBase):
     def populate_template(template, submission):
         """ Populate template with submission data """
         record = template
-        print(f"populate_template submission: {submission}")
         data = submission['data']
         record['name'] = data['projectAddress']
         record['description'] = f"Site permit: {data['sitePermit']}"
