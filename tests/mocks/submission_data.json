@@ -16,6 +16,7 @@
         "projectAddressZip": "94000",
         "isWithinExistingBuilding": "no",
         "sitePermit": "yes",
+        "willYouUseTheStateOrLocalAduProgram": "local",
         "proposedAdUs": [
             {
                 "proposedUnitType": "Studio",
@@ -88,6 +89,30 @@
             }
         ],
         "uploadSchoolFacilityFee": [
+            {
+                "url": "https://localhost/test.pdf",
+                "key": "test.pdf"
+            }
+        ],
+        "uploadBuildingPermitApplicationForm": [
+            {
+                "url": "https://localhost/test.pdf",
+                "key": "test.pdf"
+            }
+        ],
+        "uploadCompletedNoticePdf": [
+            {
+                "url": "https://localhost/test.pdf",
+                "key": "test.pdf"
+            }
+        ],
+        "uploadNoticeWrittenDeclaration": [
+            {
+                "url": "https://localhost/test.pdf",
+                "key": "test.pdf"
+            }
+        ],
+        "uploadMailingDeliveryListUnits": [
             {
                 "url": "https://localhost/test.pdf",
                 "key": "test.pdf"

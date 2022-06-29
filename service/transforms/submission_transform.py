@@ -23,7 +23,8 @@ class SubmissionTransform(TransformBase):
         record = template
         data = submission['data']
         record['name'] = data['projectAddress']
-        record['description'] = "Site permit: {0}".format(data['sitePermit'])
+        record['description'] = f"Site permit: {data['sitePermit']}"
+        record['description'] += f"\nState or Local Program: {data['willYouUseTheStateOrLocalAduProgram']}" #pylint: disable=line-too-long
         parcel = data['projectAddressBlock'] + data['projectAddressLot']
         record['parcels'][0]['parcelNumber'] = parcel
 
@@ -199,7 +200,11 @@ class SubmissionTransform(TransformBase):
             "uploadAgentAuthorization" : "Agent Authorization Form",
             "uploadSchoolFacilityFee" : "School Facility Fee Form",
             "uploadTreePlantingChecklist": "DPW Tree Checklist",
-            "uploadStreetTree": "DPW Tree Application"
+            "uploadStreetTree": "DPW Tree Application",
+            "uploadBuildingPermitApplicationForm": "Building Permit Application Form",
+            "uploadCompletedNoticePdf": "Completed Notice",
+            "uploadNoticeWrittenDeclaration": "Notice and Written Declaration",
+            "uploadMailingDeliveryListUnits": "Mailing or Delivery List of Units"
         }
         for field in field_map:
             if field in data:
