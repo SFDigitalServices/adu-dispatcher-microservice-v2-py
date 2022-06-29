@@ -38,5 +38,21 @@
     {
         "url": "https://localhost/test.pdf",
         "originalName": "DPW Tree Application - 123 MAIN ST.pdf"
+    },
+    {
+        "url": "https://localhost/test.pdf",
+        "originalName": "Building Permit Application Form - 123 MAIN ST.pdf"
+    },
+    {
+        "url": "https://localhost/test.pdf",
+        "originalName": "Completed Notice - 123 MAIN ST.pdf"
+    },
+    {
+        "url": "https://localhost/test.pdf",
+        "originalName": "Notice and Written Declaration - 123 MAIN ST.pdf"
+    },
+    {
+        "url": "https://localhost/test.pdf",
+        "originalName": "Mailing or Delivery List of Units - 123 MAIN ST.pdf"
     }
 ]

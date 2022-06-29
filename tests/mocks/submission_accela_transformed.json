@@ -3,7 +3,7 @@
         "id": "Planning-Project-Project-PRJ"
     },
     "name": "123 MAIN ST",
-    "description": "Site permit: yes",
+    "description": "Site permit: yes\nState or Local Program: local",
     "addresses": [
         {
             "streetName": "MAIN",
